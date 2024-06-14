@@ -307,6 +307,7 @@ static ncclResult_t addCollnetCollToPlan(
 
   plan->threadPerBlock = std::max(plan->threadPerBlock, collInfo->nThreads);
   if (!plan->kernelSpecialized) {
+    INFO(NCCL_ALL,"****kernelFn addCollnetCollToPlan");
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[collInfo->workFuncIndex];
   }
@@ -414,6 +415,7 @@ static ncclResult_t addTunedCollToPlan(
 
   plan->threadPerBlock = std::max(plan->threadPerBlock, collInfo->nThreads);
   if (!plan->kernelSpecialized) {
+    INFO(NCCL_ALL,"****kernelFn addTunedCollToPlan");
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[collInfo->workFuncIndex];
   }
@@ -490,6 +492,7 @@ static ncclResult_t addCBDCollToPlan(
 
   plan->threadPerBlock = std::max(plan->threadPerBlock, collInfo->nThreads);
   if (!plan->kernelSpecialized) {
+    INFO(NCCL_ALL,"****kernelFn addCBDCollToPlan");
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[collInfo->workFuncIndex];
   }
@@ -890,6 +893,7 @@ static ncclResult_t scheduleP2pTasksToPlan(
 
   plan->threadPerBlock = std::max(plan->threadPerBlock, NCCL_MAX_NTHREADS);
   if (!plan->kernelSpecialized) {
+    INFO(NCCL_ALL,"****kernelFn scheduleP2pTasksToPlan");
     plan->kernelFn = ncclDevKernelForFunc[ncclDevFuncId_P2p()];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[ncclDevFuncId_P2p()];
   }
@@ -1350,7 +1354,7 @@ NCCL_PARAM(MemSyncDomain, "MEM_SYNC_DOMAIN", cudaLaunchMemSyncDomainRemote);
 
 //STEFANO
 //struct ncclComm is defined in comm.h it has more than 100 fields...
-//
+//struct ncclKernelPlan is defined in comm.h it includes the kernet function and the channels
 ncclResult_t ncclLaunchKernel(struct ncclComm* comm, struct ncclKernelPlan* plan) {
   struct ncclTasks* tasks = &comm->tasks;
   void *fn = plan->kernelFn;
