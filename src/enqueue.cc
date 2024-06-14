@@ -1964,12 +1964,10 @@ static ncclResult_t taskAppend(struct ncclComm* comm, struct ncclInfo* info) {
     NCCLCHECK(hostToDevRedOp(&info->opFull, info->op, info->datatype, comm));
 
     if (comm->nRanks == 1) {
-      printf("ZZZZZZZZZZZZZZZZZ\n");
       NCCLCHECK(ncclLaunchOneRank(info->recvbuff, info->sendbuff, info->count, info->opFull, info->datatype, info->stream));
       return ncclSuccess;
     } else {
-      INFO(NCCL_ALL,"*******else else branch");
-      printf("ZZZZZZZZZZZZZZZZZ\n");
+      INFO(NCCL_ALL,"*******else else branch, comm->nRanks %d", comm->nRanks);
       // Must be in thread local group before tasks can be alloc'd in `comm->memScoped`.
       ncclGroupCommJoin(info->comm);
       struct ncclInfo* t = ncclMemoryStackAlloc<struct ncclInfo>(&comm->memScoped);
