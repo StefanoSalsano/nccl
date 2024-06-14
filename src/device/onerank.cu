@@ -47,6 +47,7 @@ namespace {
 
 ncclResult_t ncclLaunchOneRank(void* dst, void const* src, size_t nElts, struct ncclDevRedOpFull redOp, ncclDataType_t eltType, cudaStream_t stream) {
   size_t eltSize = ncclTypeSize(eltType);
+  printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
   INFO(NCCL_ALL,"*******ncclLaunchOneRank");
 
   if (redOp.op != ncclDevPreMulSum) {
