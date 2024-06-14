@@ -47,7 +47,6 @@ namespace {
 
 ncclResult_t ncclLaunchOneRank(void* dst, void const* src, size_t nElts, struct ncclDevRedOpFull redOp, ncclDataType_t eltType, cudaStream_t stream) {
   size_t eltSize = ncclTypeSize(eltType);
-  printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
   INFO(NCCL_ALL,"*******ncclLaunchOneRank");
 
   if (redOp.op != ncclDevPreMulSum) {
@@ -79,12 +78,8 @@ ncclResult_t ncclLaunchOneRank(void* dst, void const* src, size_t nElts, struct 
   dim3 block = {512, 1, 1};
   void* args[5] = {&dst, &src, &nElts, &redOp.scalarArg, &redOp.scalarArgIsPtr};
   volatile long long int my_counter=0;
-  INFO(NCCL_ALL,"*******HERE");
-  for (my_counter=0;my_counter<(1 << 28);my_counter++) {
-    my_counter = my_counter+1;
-    my_counter = my_counter-1;
-  }
-
+  INFO(NCCL_ALL,"cudaLaunchKernel in ncclLaunchOneRank");
   CUDACHECK(cudaLaunchKernel(kernel, grid, block, args, 0, stream));
   return ncclSuccess;
 }
+

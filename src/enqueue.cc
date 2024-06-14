@@ -1399,11 +1399,13 @@ ncclResult_t ncclLaunchKernel(struct ncclComm* comm, struct ncclKernelPlan* plan
     launchConfig.numAttrs = attrs;
     launchConfig.stream = launchStream;
 
+    INFO(NCCL_ALL,"cudaLaunchKernelExC");
     CUDACHECK(cudaLaunchKernelExC(&launchConfig, fn, args));
     return ncclSuccess;
   }
   #endif
   // Standard kernel launch
+  INFO(NCCL_ALL,"Standard kernel launch");
   CUDACHECK(cudaLaunchKernel(fn, grid, block, args, smem, launchStream));
   return ncclSuccess;
 }
@@ -1957,10 +1959,10 @@ static ncclResult_t taskAppend(struct ncclComm* comm, struct ncclInfo* info) {
       }
     }
   } else {
-    // Copy reduction op state from op handle into info struct here since the
-    // op handle may be destroyed before ncclGroupEnd().
     INFO(NCCL_ALL,"*******else branch");
 
+    // Copy reduction op state from op handle into info struct here since the
+    // op handle may be destroyed before ncclGroupEnd().
     NCCLCHECK(hostToDevRedOp(&info->opFull, info->op, info->datatype, comm));
 
     if (comm->nRanks == 1) {
