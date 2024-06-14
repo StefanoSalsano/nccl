@@ -707,7 +707,7 @@ static ncclResult_t registerIntraNodeBuffers(
       info->nChannels = std::max(comm->config.minCTAs, std::min(comm->config.maxCTAs, 1));
       info->regBufType = NCCL_COLLNET_REG_BUFFER;
       if (sendRegBufFlag == 1 && recvRegBufFlag == 1) {
-        INFO(NCCL_REG, "rank %d successfully registered collNet sendbuff %p (handle %p), sendbuff size %ld, recvbuff %p (handle %p), recvbuff size %ld", comm->rank, info->sendbuff, sendHandle, info->sendbuffSize, info->recvbuff, recvHandle, info->recvbuffSize);
+        INFO(NCCL_ALL, "rank %d successfully registered collNet sendbuff %p (handle %p), sendbuff size %ld, recvbuff %p (handle %p), recvbuff size %ld", comm->rank, info->sendbuff, sendHandle, info->sendbuffSize, info->recvbuff, recvHandle, info->recvbuffSize);
       }
     }
   }
@@ -1348,6 +1348,9 @@ ncclResult_t ncclLaunchKernelBefore_NoUncapturedCuda(struct ncclComm* comm, stru
 NCCL_PARAM(MemSyncDomain, "MEM_SYNC_DOMAIN", cudaLaunchMemSyncDomainRemote);
 #endif
 
+//STEFANO
+//struct ncclComm is defined in comm.h it has more than 100 fields...
+//
 ncclResult_t ncclLaunchKernel(struct ncclComm* comm, struct ncclKernelPlan* plan) {
   struct ncclTasks* tasks = &comm->tasks;
   void *fn = plan->kernelFn;
@@ -1355,6 +1358,8 @@ ncclResult_t ncclLaunchKernel(struct ncclComm* comm, struct ncclKernelPlan* plan
   dim3 grid = {(unsigned)plan->channelCount, 1, 1};
   dim3 block = {(unsigned)plan->threadPerBlock, 1, 1};
   size_t smem = ncclShmemDynamicSize(comm->cudaArch);
+
+  // these arguments are passed to the kernel function 
   void *args[3] = {&comm->devComm, &plan->channelMask, &plan->workHead};
 
   #if CUDART_VERSION >= 11080
@@ -1400,6 +1405,10 @@ ncclResult_t ncclLaunchKernel(struct ncclComm* comm, struct ncclKernelPlan* plan
     launchConfig.stream = launchStream;
 
     INFO(NCCL_ALL,"cudaLaunchKernelExC");
+    //STEFANO
+    // Parameters config : Launch configuration, func : Kernel to launch
+    // args : Array of pointers to kernel parameters
+    // see https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__EXECUTION.html#group__CUDART__EXECUTION_1g5064cdf5d8e6741ace56fd8be951783c
     CUDACHECK(cudaLaunchKernelExC(&launchConfig, fn, args));
     return ncclSuccess;
   }
