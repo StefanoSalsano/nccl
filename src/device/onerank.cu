@@ -47,8 +47,11 @@ namespace {
 
 ncclResult_t ncclLaunchOneRank(void* dst, void const* src, size_t nElts, struct ncclDevRedOpFull redOp, ncclDataType_t eltType, cudaStream_t stream) {
   size_t eltSize = ncclTypeSize(eltType);
+  INFO(NCCL_ALL,"*******ncclLaunchOneRank");
+
   if (redOp.op != ncclDevPreMulSum) {
     if (dst != src) {
+      INFO(NCCL_ALL,"*******ncclCudaMemcpyAsync");
       NCCLCHECK(ncclCudaMemcpyAsync((char*)dst, (char*)src, nElts*eltSize, stream));
     }
     return ncclSuccess;
