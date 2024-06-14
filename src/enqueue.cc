@@ -1913,8 +1913,11 @@ static int collCmp(struct ncclInfo *a, struct ncclInfo *b) {
 static ncclResult_t taskAppend(struct ncclComm* comm, struct ncclInfo* info) {
   ncclTasks *tasks = &comm->tasks;
 
+  INFO(NCCL_ALL,"*******taskAppend");
+
   if (info->count == 0 && info->coll != ncclFuncSend && info->coll != ncclFuncRecv) return ncclSuccess;
   if (info->coll == ncclFuncSend || info->coll == ncclFuncRecv) {
+    INFO(NCCL_ALL,"*******if branch");
     int peer = info->root;
     ssize_t nBytes = info->count*ncclTypeSize(info->datatype);
     bool isSendNotRecv = info->coll == ncclFuncSend;
@@ -1956,6 +1959,8 @@ static ncclResult_t taskAppend(struct ncclComm* comm, struct ncclInfo* info) {
   } else {
     // Copy reduction op state from op handle into info struct here since the
     // op handle may be destroyed before ncclGroupEnd().
+    INFO(NCCL_ALL,"*******else branch");
+
     NCCLCHECK(hostToDevRedOp(&info->opFull, info->op, info->datatype, comm));
 
     if (comm->nRanks == 1) {
