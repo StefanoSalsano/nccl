@@ -1662,6 +1662,7 @@ static ncclResult_t getPatternInfo(struct ncclInfo* collInfo) {
 
 static ncclResult_t computeCollWorkFunc(struct ncclInfo* collInfo) {
   collInfo->workFuncIndex = ncclDevFuncId(collInfo->coll, collInfo->opFull.op, collInfo->datatype, collInfo->algorithm, collInfo->protocol);
+  printf ("computeCollWorkFunc %d\n", collInfo->workFuncIndex);
   return ncclSuccess;
 }
 
