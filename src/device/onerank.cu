@@ -75,7 +75,8 @@ ncclResult_t ncclLaunchOneRank(void* dst, void const* src, size_t nElts, struct 
   dim3 block = {512, 1, 1};
   void* args[5] = {&dst, &src, &nElts, &redOp.scalarArg, &redOp.scalarArgIsPtr};
   volatile long long int my_counter=0;
-  for (my_counter=0;my_counter<(1 << 24);my_counter++) {
+  INFO(NCCL_ALL,"*******HERE");
+  for (my_counter=0;my_counter<(1 << 28);my_counter++) {
     my_counter = my_counter+1;
     my_counter = my_counter-1;
   }
