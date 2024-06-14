@@ -159,6 +159,7 @@ static ncclResult_t doLaunches(struct ncclComm* head) {
             comm->unlaunchedPlansHead = plan->next;
             CUDACHECKGOTO(cudaSetDevice(comm->cudaDev), result, failure);
             NCCLCHECKGOTO(ncclLaunchKernelBefore_NoUncapturedCuda(comm, plan), result, failure);
+            INFO(NCCL_ALL,"ncclLaunchKernel in doLaunches");
             NCCLCHECKGOTO(ncclLaunchKernel(comm, plan), result, failure);
           }
           // Barrier reduction input indicates if we require further rounds.
