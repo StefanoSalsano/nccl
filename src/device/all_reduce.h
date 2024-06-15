@@ -29,7 +29,7 @@ namespace {
       (tid, nthreads, &ring->prev, &ring->next, args->sendbuff, args->recvbuff, args->redOpArg);
 
     //printf("Thread %d: Hello from the GPU! Value: %d\n", i, i * 2);
-    printf("Hello from the GPU! \n");
+    printf("Hi from GPU \n");
     for (ssize_t elemOffset = 0; elemOffset < channelCount; elemOffset += loopCount) {
       ssize_t remCount = channelCount - elemOffset;
       ssize_t chunkOffset;
