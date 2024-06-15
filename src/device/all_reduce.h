@@ -8,6 +8,7 @@
 #include "collectives.h"
 #include "primitives.h"
 
+
 namespace {
   template<typename T, typename RedOp, typename Proto>
   __device__ __forceinline__ void runRing(ncclWorkElem *args) {
@@ -27,6 +28,8 @@ namespace {
     Primitives<T, RedOp, FanSymmetric<1>, 1, Proto, 0> prims
       (tid, nthreads, &ring->prev, &ring->next, args->sendbuff, args->recvbuff, args->redOpArg);
 
+    //printf("Thread %d: Hello from the GPU! Value: %d\n", i, i * 2);
+    printf("Hello from the GPU! \n");
     for (ssize_t elemOffset = 0; elemOffset < channelCount; elemOffset += loopCount) {
       ssize_t remCount = channelCount - elemOffset;
       ssize_t chunkOffset;
