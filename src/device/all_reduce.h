@@ -45,6 +45,8 @@ namespace {
       chunkOffset = chunk * chunkCount;
       offset = gridOffset + elemOffset + chunkOffset;
       nelem = (int)min(chunkCount, remCount - chunkOffset);
+
+      printf("GPU offset %lu nelem %d\n",offset,nelem);
       prims.send(offset, nelem);
 
       // k-2 steps: reduce and copy to next GPU
