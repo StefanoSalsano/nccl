@@ -1931,11 +1931,11 @@ static int collCmp(struct ncclInfo *a, struct ncclInfo *b) {
 static ncclResult_t taskAppend(struct ncclComm* comm, struct ncclInfo* info) {
   ncclTasks *tasks = &comm->tasks;
 
-  INFO(NCCL_ALL,"*******taskAppend");
+  INFO(NCCL_ALL,"************ taskAppend");
 
   if (info->count == 0 && info->coll != ncclFuncSend && info->coll != ncclFuncRecv) return ncclSuccess;
   if (info->coll == ncclFuncSend || info->coll == ncclFuncRecv) {
-    INFO(NCCL_ALL,"*******if branch");
+    INFO(NCCL_ALL,"*************** if branch");
     int peer = info->root;
     ssize_t nBytes = info->count*ncclTypeSize(info->datatype);
     bool isSendNotRecv = info->coll == ncclFuncSend;
@@ -1975,7 +1975,7 @@ static ncclResult_t taskAppend(struct ncclComm* comm, struct ncclInfo* info) {
       }
     }
   } else {
-    INFO(NCCL_ALL,"*******else branch");
+    //INFO(NCCL_ALL,"*******else branch");
 
     // Copy reduction op state from op handle into info struct here since the
     // op handle may be destroyed before ncclGroupEnd().
@@ -1985,7 +1985,8 @@ static ncclResult_t taskAppend(struct ncclComm* comm, struct ncclInfo* info) {
       NCCLCHECK(ncclLaunchOneRank(info->recvbuff, info->sendbuff, info->count, info->opFull, info->datatype, info->stream));
       return ncclSuccess;
     } else {
-      INFO(NCCL_ALL,"*******else else branch, comm->nRanks %d", comm->nRanks);
+      INFO(NCCL_ALL,"*************** else else branch, comm->nRanks %d", comm->nRanks);
+      
       // Must be in thread local group before tasks can be alloc'd in `comm->memScoped`.
       ncclGroupCommJoin(info->comm);
       struct ncclInfo* t = ncclMemoryStackAlloc<struct ncclInfo>(&comm->memScoped);
@@ -2043,6 +2044,7 @@ ncclResult_t ncclEnqueueCheck(struct ncclInfo* info) {
   }
   NCCLCHECKGOTO(ArgsCheck(info), ret, fail);
 
+  INFO(NCCL_ALL,"********* ncclEnqueueCheck (enqueue.cc)");
   INFO(NCCL_ALL,"%s: opCount %lx sendbuff %p recvbuff %p count %zi datatype %d op %d root %d comm %p [nranks=%d] stream %p",
         info->opName, info->comm->opCount, info->sendbuff, info->recvbuff, info->count,
         info->datatype, info->op, info->root, info->comm, info->comm->nRanks, info->stream);
