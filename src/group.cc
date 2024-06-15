@@ -337,6 +337,7 @@ static ncclResult_t groupLaunch(struct ncclAsyncJob *job_) {
   }
 
   if (groupCommHeadMain != nullptr) {
+    INFO(NCCL_ALL,"doLaunches in groupLaunch");
     NCCLCHECKGOTO(doLaunches(groupCommHeadMain), ret, fail);
   }
 
@@ -416,6 +417,7 @@ ncclResult_t ncclGroupEndInternal() {
       ret = ncclInProgress;
     } else {
       /* blocking group */
+      INFO(NCCL_ALL,"groupLaunch in ncclGroupEndInternal");
       NCCLCHECKGOTO(groupLaunch(&ncclGroupJobMainPtr->base), ret, fail);
       groupResetJobState(ncclGroupJobMainPtr);
     }

@@ -430,6 +430,8 @@ fail:
   goto exit;
 }
 
+// CBD=Chunked Buffer Data
+
 static ncclResult_t addCBDCollToPlan(
     struct ncclComm* comm, struct ncclKernelPlan* plan, int usableChannels,
     struct ncclInfo* collInfo, int* nWorkBudget
