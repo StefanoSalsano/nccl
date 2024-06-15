@@ -159,7 +159,7 @@ static ncclResult_t doLaunches(struct ncclComm* head) {
             comm->unlaunchedPlansHead = plan->next;
             CUDACHECKGOTO(cudaSetDevice(comm->cudaDev), result, failure);
             NCCLCHECKGOTO(ncclLaunchKernelBefore_NoUncapturedCuda(comm, plan), result, failure);
-            INFO(NCCL_ALL,"ncclLaunchKernel in doLaunches");
+            INFO(NCCL_ALL,"doLaunches -> ncclLaunchKernel");
             NCCLCHECKGOTO(ncclLaunchKernel(comm, plan), result, failure);
           }
           // Barrier reduction input indicates if we require further rounds.
@@ -337,7 +337,7 @@ static ncclResult_t groupLaunch(struct ncclAsyncJob *job_) {
   }
 
   if (groupCommHeadMain != nullptr) {
-    INFO(NCCL_ALL,"doLaunches in groupLaunch");
+    INFO(NCCL_ALL,"groupLaunch -> doLaunches");
     NCCLCHECKGOTO(doLaunches(groupCommHeadMain), ret, fail);
   }
 
@@ -417,7 +417,7 @@ ncclResult_t ncclGroupEndInternal() {
       ret = ncclInProgress;
     } else {
       /* blocking group */
-      INFO(NCCL_ALL,"groupLaunch in ncclGroupEndInternal");
+      INFO(NCCL_ALL,"ncclGroupEndInternal -> groupLaunch ");
       NCCLCHECKGOTO(groupLaunch(&ncclGroupJobMainPtr->base), ret, fail);
       groupResetJobState(ncclGroupJobMainPtr);
     }
