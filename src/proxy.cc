@@ -902,6 +902,7 @@ void* ncclProxyProgress(void *proxyState_) {
 
 ncclResult_t ncclProxyStart(struct ncclComm* comm) {
   struct ncclProxyOps* proxyOps = comm->proxyState->proxyOps;
+  INFO(NCCL_ALL, "---- ncclProxyStart");
   if (proxyOps == NULL) return ncclSuccess;
   TIME_START(1);
   for (int r = 0; r < comm->sharedRes->tpNLocalRanks; r++) {
@@ -959,6 +960,7 @@ struct ncclProxyConnectionPool {
 };
 
 static ncclResult_t ncclProxyNewConnection(struct ncclProxyConnectionPool* pool, int* id) {
+  INFO(NCCL_ALL, "---- ncclProxyNewConnection");
   if (pool->offset == NCCL_PROXY_CONN_POOL_SIZE) {
     NCCLCHECK(ncclRealloc(&pool->pools, pool->banks, pool->banks+1));
     NCCLCHECK(ncclCalloc(pool->pools+pool->banks, NCCL_PROXY_CONN_POOL_SIZE));
@@ -973,7 +975,7 @@ static ncclResult_t ncclProxyNewConnection(struct ncclProxyConnectionPool* pool,
 static ncclResult_t ncclProxyGetConnection(struct ncclProxyConnectionPool* pool, int id, struct ncclProxyConnection** conn) {
   int bank = id>>NCCL_PROXY_CONN_POOL_SIZE_POW2;
   int offset = id&NCCL_PROXY_CONN_POOL_MASK;
-  printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ncclProxyGetConnection\n");
+  INFO(NCCL_ALL, "---- ncclProxyGetConnection");
   if ((pool->pools == NULL) || (bank > pool->banks) || (pool->pools[bank] == NULL)) return ncclInternalError;
   *conn = pool->pools[bank]+offset;
   return ncclSuccess;
