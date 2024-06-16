@@ -620,6 +620,7 @@ static ncclResult_t recvProxySetup(struct ncclProxyConnection* connection, struc
   resources->netDeviceType = props.netDeviceType;
 
   if (respSize != sizeof(ncclNetHandle_t)) return ncclInternalError;
+  printf("---- recvProxySetup -> listen\n");
   NCCLCHECK(proxyState->ncclNet->listen(req->netDev, respBuff, &resources->netListenComm));
   *done = 1;
 
