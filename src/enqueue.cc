@@ -307,7 +307,7 @@ static ncclResult_t addCollnetCollToPlan(
 
   plan->threadPerBlock = std::max(plan->threadPerBlock, collInfo->nThreads);
   if (!plan->kernelSpecialized) {
-    INFO(NCCL_ALL,"****kernelFn addCollnetCollToPlan");
+    INFO(NCCL_ALL,"****addCollnetCollToPlan -> set kernelFn");  //not used in our scenario
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[collInfo->workFuncIndex];
   }
@@ -415,7 +415,7 @@ static ncclResult_t addTunedCollToPlan(
 
   plan->threadPerBlock = std::max(plan->threadPerBlock, collInfo->nThreads);
   if (!plan->kernelSpecialized) {
-    INFO(NCCL_ALL,"****kernelFn addTunedCollToPlan");
+    INFO(NCCL_ALL,"****addTunedCollToPlan -> set kernelFn"); //not reached in our scenario
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[collInfo->workFuncIndex];
   }
@@ -495,7 +495,7 @@ static ncclResult_t addCBDCollToPlan(
   plan->threadPerBlock = std::max(plan->threadPerBlock, collInfo->nThreads);
   INFO(NCCL_ALL,"addCBDCollToPlan collInfo->nThreads = %d plan->threadPerBlock = %d",collInfo->nThreads,plan->threadPerBlock);
   if (!plan->kernelSpecialized) {
-    INFO(NCCL_ALL,"****kernelFn addCBDCollToPlan");
+    INFO(NCCL_ALL,"****addCBDCollToPlan -> set kernelFn");  //reached in our scenario
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[collInfo->workFuncIndex];
   }
@@ -590,6 +590,7 @@ static void finishPlan(struct ncclKernelPlan* plan) {
   plan->channelCount = channelCount;
   plan->channelMask = channelMask;
   plan->hasProxyOps = hasProxyOps;
+  INFO(NCCL_ALL,"KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
   plan->threadPerBlock = std::max(plan->threadPerBlock, 3*WARP_SIZE);
 }
 
@@ -898,7 +899,7 @@ static ncclResult_t scheduleP2pTasksToPlan(
 
   plan->threadPerBlock = std::max(plan->threadPerBlock, NCCL_MAX_NTHREADS);
   if (!plan->kernelSpecialized) {
-    INFO(NCCL_ALL,"****kernelFn scheduleP2pTasksToPlan");
+    INFO(NCCL_ALL,"****scheduleP2pTasksToPlan -> kernelFn ");  //not reached in our scenario
     plan->kernelFn = ncclDevKernelForFunc[ncclDevFuncId_P2p()];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[ncclDevFuncId_P2p()];
   }
