@@ -1043,8 +1043,10 @@ done:
   return ncclSuccess;
 }
 
+//inter-node topology
 ncclResult_t ncclTopoPrintGraph(struct ncclTopoSystem* system, struct ncclTopoGraph* graph) {
-  INFO(NCCL_GRAPH, "Pattern %d, crossNic %d, nChannels %d, bw %f/%f, type %s/%s, sameChannels %d", graph->pattern, graph->crossNic, graph->nChannels, graph->bwIntra, graph->bwInter, topoPathTypeStr[graph->typeIntra], topoPathTypeStr[graph->typeInter], graph->sameChannels);
+  INFO(NCCL_ALL"==========Inter-node topology=============");
+  INFO(NCCL_ALL, "Pattern %d, crossNic %d, nChannels %d, bw %f/%f, type %s/%s, sameChannels %d", graph->pattern, graph->crossNic, graph->nChannels, graph->bwIntra, graph->bwInter, topoPathTypeStr[graph->typeIntra], topoPathTypeStr[graph->typeInter], graph->sameChannels);
   int ngpus = system->nodes[GPU].count;
 
   char line[1024];
@@ -1063,7 +1065,7 @@ ncclResult_t ncclTopoPrintGraph(struct ncclTopoSystem* system, struct ncclTopoGr
       sprintf(line+offset, " %s/%lx", topoNodeTypeStr[NET], graph->inter[2*c+1]);
       offset = strlen(line);
     }
-    INFO(NCCL_GRAPH, "%s", line);
+    INFO(NCCL_ALL, "%s", line);
   }
   return ncclSuccess;
 }
