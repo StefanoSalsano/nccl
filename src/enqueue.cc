@@ -493,6 +493,7 @@ static ncclResult_t addCBDCollToPlan(
   }
 
   plan->threadPerBlock = std::max(plan->threadPerBlock, collInfo->nThreads);
+  INFO(NCCL_ALL,"addCBDCollToPlan collInfo->nThreads = %d plan->threadPerBlock = %d",collInfo->nThreads,plan->threadPerBlock);
   if (!plan->kernelSpecialized) {
     INFO(NCCL_ALL,"****kernelFn addCBDCollToPlan");
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
