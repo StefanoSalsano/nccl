@@ -298,11 +298,12 @@ static ncclResult_t ncclTopoPrintRec(struct ncclTopoNode* node, struct ncclTopoN
   return ncclSuccess;
 }
 
+// topology inside a node (CPU/GPU/NIC)
 ncclResult_t ncclTopoPrint(struct ncclTopoSystem* s) {
   INFO(NCCL_ALL, "=== System : maxBw %2.1f totalBw %2.1f ===", s->maxBw, s->totalBw);
   char line[1024];
   for (int n=0; n<s->nodes[CPU].count; n++) NCCLCHECK(ncclTopoPrintRec(s->nodes[CPU].nodes+n, NULL, line, 0));
-  INFO(NCCL_ALL, "==========================================");
+  INFO(NCCL_ALL, "======Topology inside a node====================");
   NCCLCHECK(ncclTopoPrintPaths(s));
   return ncclSuccess;
 }

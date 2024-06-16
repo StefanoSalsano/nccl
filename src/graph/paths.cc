@@ -117,7 +117,7 @@ static void printNodePaths(struct ncclTopoSystem* system, struct ncclTopoNode* n
 #ifdef ENABLE_TRACE
   INFO(NCCL_GRAPH, "Paths from %s/%lX :", topoNodeTypeStr[node->type], node->id);
 #else
-  snprintf(line, linesize, "%s/%lX :", topoNodeTypeStr[node->type], node->id);
+  snprintf(line, linesize, "%s/%lX : ", topoNodeTypeStr[node->type], node->id);
   int offset = strlen(line);
 #endif
   for (int t=0; t<NCCL_TOPO_NODE_TYPES; t++) {
@@ -134,13 +134,15 @@ static void printNodePaths(struct ncclTopoSystem* system, struct ncclTopoNode* n
       }
       INFO(NCCL_GRAPH, "%s (%f)", line, node->paths[t][n].bw);
 #else
-      snprintf(line+offset, linesize-offset, "%s/%lx-%lx (%d/%.1f/%s) ", topoNodeTypeStr[t], NCCL_TOPO_ID_SYSTEM_ID(system->nodes[t].nodes[n].id), NCCL_TOPO_ID_LOCAL_ID(system->nodes[t].nodes[n].id), node->paths[t][n].count, node->paths[t][n].bw, topoPathTypeStr[node->paths[t][n].type]);
+      snprintf(line+offset, linesize-offset, "%s/%lx-%lx (%d/%.1f/%s) ", topoNodeTypeStr[t], 
+                 NCCL_TOPO_ID_SYSTEM_ID(system->nodes[t].nodes[n].id), NCCL_TOPO_ID_LOCAL_ID(system->nodes[t].nodes[n].id),
+                 node->paths[t][n].count, node->paths[t][n].bw, topoPathTypeStr[node->paths[t][n].type]);
       offset = strlen(line);
 #endif
     }
   }
 #ifndef ENABLE_TRACE
-  INFO(NCCL_ALL, "%s", line);
+  INFO(NCCL_ALL, "summary: %s", line);
 
   // repeating all the part done with ENABLE_TRACE hereafter
   INFO(NCCL_ALL, "Paths from %s/%lX :", topoNodeTypeStr[node->type], node->id);
@@ -161,6 +163,7 @@ static void printNodePaths(struct ncclTopoSystem* system, struct ncclTopoNode* n
 #endif
 }
 
+// paths inside a node
 ncclResult_t ncclTopoPrintPaths(struct ncclTopoSystem* system) {
   for (int i=0; i<system->nodes[GPU].count; i++) {
     printNodePaths(system, system->nodes[GPU].nodes+i);
