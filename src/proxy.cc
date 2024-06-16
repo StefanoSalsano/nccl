@@ -1463,7 +1463,7 @@ void* ncclProxyService(void* _args) {
   struct ncclProxyState* proxyState =  (struct ncclProxyState*) _args;
   // if (CPU_COUNT(&comm->cpuAffinity)) sched_setaffinity(0, sizeof(cpu_set_t), &comm->cpuAffinity);
   if (setProxyThreadContext(proxyState)) {
-    INFO(NCCL_INIT, "[Proxy Service] Created CUDA context on device %d", proxyState->cudaDev);
+    INFO(NCCL_ALL, "ncclProxyService [Proxy Service] Created CUDA context on device %d", proxyState->cudaDev);
   } else if (cudaSetDevice(proxyState->cudaDev) != cudaSuccess) {
     WARN("[Proxy Service] Failed to set CUDA device %d", proxyState->cudaDev);
   }
@@ -1570,13 +1570,14 @@ void* ncclProxyService(void* _args) {
           } else if (type == ncclProxyMsgClose) {
             closeConn = 1;
           } else if (proxyMatchOpType(type)) {
+            INFO(NCCL_ALL, "ncclProxyService -> proxyServiceInitOp");
             res = proxyServiceInitOp(type, peers+s, &connectionPool, proxyState, &asyncOpCount);
           } else {
             WARN("[Service thread] Unknown command %d from localRank %d", type, peer->tpLocalRank);
             closeConn = 1;
           }
 
-          INFO(NCCL_PROXY, "Received and initiated operation=%s res=%d", ncclProxyMsgTypeStr[type], res);
+          INFO(NCCL_ALL, "Received and initiated operation=%s res=%d", ncclProxyMsgTypeStr[type], res);
         }
       } else if (pollfds[s].revents & POLLHUP) {
         closeConn = 1;
