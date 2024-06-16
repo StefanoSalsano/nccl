@@ -279,7 +279,7 @@ end:
   }
   *ns = nSocks;
   *nt = nThreads;
-  if (nSocks > 0) INFO(NCCL_INIT, "NET/Socket: Using %d threads and %d sockets per thread", nThreads, nSocksPerThread);
+  if (nSocks > 0) INFO(NCCL_ALL, "NET/Socket: Using %d threads and %d sockets per thread", nThreads, nSocksPerThread);
   return ncclSuccess;
 }
 
