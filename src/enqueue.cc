@@ -311,9 +311,19 @@ static ncclResult_t addCollnetCollToPlan(
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[collInfo->workFuncIndex];
   }
-  INFO(NCCL_ALL, "collnetColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, chunkCount %d, funcIndex %d, nThreads %d", collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm), ncclProtoToString(collInfo->protocol), collInfo->nChannels, collInfo->count, collInfo->workBytes, usableChannels, collInfo->chunkCount, collInfo->workFuncIndex, collInfo->nThreads);
+  INFO(NCCL_ALL,
+       "collnetColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, chunkCount %d, funcIndex %d, nThreads %d", 
+               collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), 
+               ncclAlgoToString(collInfo->algorithm), ncclProtoToString(collInfo->protocol), 
+               collInfo->nChannels, collInfo->count, collInfo->workBytes, usableChannels, collInfo->chunkCount,
+               collInfo->workFuncIndex, collInfo->nThreads);
   if (comm->rank == 0) {
-    INFO(NCCL_ALL, "collnetColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, chunkCount %d, funcIndex %d, nThreads %d", collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm), ncclProtoToString(collInfo->protocol), collInfo->nChannels, collInfo->count, collInfo->workBytes, usableChannels, collInfo->chunkCount, collInfo->workFuncIndex, collInfo->nThreads);
+    INFO(NCCL_ALL,
+        "collnetColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, chunkCount %d, funcIndex %d, nThreads %d",
+                collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype),
+                ncclAlgoToString(collInfo->algorithm), ncclProtoToString(collInfo->protocol),
+                collInfo->nChannels, collInfo->count, collInfo->workBytes, usableChannels, collInfo->chunkCount,
+                collInfo->workFuncIndex, collInfo->nThreads);
   }
 
 exit:
@@ -502,8 +512,14 @@ static ncclResult_t addCBDCollToPlan(
 
   if (comm->rank == 0) {
     
-    INFO(NCCL_ALL, "CBDColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, maxBytesPerChannel %ld, chunkCount %d, lastChunkCount %ld, funcIndex %d, nThreads %d", collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm), ncclProtoToString(collInfo->protocol), rnChannel, collInfo->count, collInfo->workBytes, usableChannels, plan->maxBytesPerChannel, collInfo->chunkCount, lastChunkCount, collInfo->workFuncIndex, collInfo->nThreads);
-    TRACE(NCCL_COLL, "CBDColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, maxBytesPerChannel %ld, chunkCount %d, lastChunkCount %ld, funcIndex %d, nThreads %d", collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm), ncclProtoToString(collInfo->protocol), rnChannel, collInfo->count, collInfo->workBytes, usableChannels, plan->maxBytesPerChannel, collInfo->chunkCount, lastChunkCount, collInfo->workFuncIndex, collInfo->nThreads);
+    INFO(NCCL_ALL, "CBDColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, maxBytesPerChannel %ld, chunkCount %d, lastChunkCount %ld, funcIndex %d, nThreads %d",
+    collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm),
+    ncclProtoToString(collInfo->protocol), rnChannel, collInfo->count, collInfo->workBytes, usableChannels, plan->maxBytesPerChannel,
+    collInfo->chunkCount, lastChunkCount, collInfo->workFuncIndex, collInfo->nThreads);
+    TRACE(NCCL_COLL, "CBDColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, maxBytesPerChannel %ld, chunkCount %d, lastChunkCount %ld, funcIndex %d, nThreads %d",
+    collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm),
+    ncclProtoToString(collInfo->protocol), rnChannel, collInfo->count, collInfo->workBytes, usableChannels, plan->maxBytesPerChannel,
+    collInfo->chunkCount, lastChunkCount, collInfo->workFuncIndex, collInfo->nThreads);
   }
 
 exit:
@@ -590,8 +606,8 @@ static void finishPlan(struct ncclKernelPlan* plan) {
   plan->channelCount = channelCount;
   plan->channelMask = channelMask;
   plan->hasProxyOps = hasProxyOps;
-  INFO(NCCL_ALL,"KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
   plan->threadPerBlock = std::max(plan->threadPerBlock, 3*WARP_SIZE);
+
 }
 
 int64_t ncclParamLocalRegister();
