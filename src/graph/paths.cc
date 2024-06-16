@@ -157,6 +157,7 @@ static void printNodePaths(struct ncclTopoSystem* system, struct ncclTopoNode* n
       }
       INFO(NCCL_ALL, "%s (%f)", line, node->paths[t][n].bw);
     }
+  }
 #endif
 }
 
