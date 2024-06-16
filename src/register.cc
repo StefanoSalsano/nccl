@@ -58,6 +58,7 @@ ncclResult_t ncclNetRegister(struct ncclComm* comm, void* addr, size_t size, str
       void *lComm = NULL;
       ncclNetHandle_t netHandle;
       bool connected = false;
+      INFO(NCCL_ALL, "---- ncclNetRegister -> listen");
       NCCLCHECKGOTO(comm->ncclNet->listen(dev, &netHandle, &lComm), ret, end);
       while (!connected) {
         if (*comm->abortFlag) {

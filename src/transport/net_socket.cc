@@ -287,8 +287,8 @@ ncclResult_t ncclNetSocketListen(int dev, void* opaqueHandle, void** listenComm)
   if (dev < 0 || dev >= ncclNetIfs) { // data transfer socket is based on specified dev
     return ncclInternalError;
   }
-  printf("---------------------------ncclNetSocketListen\n");
-  INFO(NCCL_ALL, "------INFO ncclNetSocketListen");
+
+  INFO(NCCL_ALL, "---- ncclNetSocketListen");
 
   struct ncclNetSocketHandle* handle = (struct ncclNetSocketHandle*) opaqueHandle;
   memset(handle, 0, sizeof(struct ncclNetSocketHandle));
