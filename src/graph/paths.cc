@@ -113,6 +113,7 @@ static ncclResult_t ncclTopoSetPaths(struct ncclTopoNode* baseNode, struct ncclT
 static void printNodePaths(struct ncclTopoSystem* system, struct ncclTopoNode* node) {
   const int linesize = 1024;
   char line[linesize];
+  
 #ifdef ENABLE_TRACE
   INFO(NCCL_GRAPH, "Paths from %s/%lX :", topoNodeTypeStr[node->type], node->id);
 #else
@@ -139,7 +140,23 @@ static void printNodePaths(struct ncclTopoSystem* system, struct ncclTopoNode* n
     }
   }
 #ifndef ENABLE_TRACE
-  INFO(NCCL_GRAPH, "%s", line);
+  INFO(NCCL_ALL, "%s", line);
+
+  // repeating all the part done with ENABLE_TRACE hereafter
+
+  INFO(NCCL_ALL, "Paths from %s/%lX :", topoNodeTypeStr[node->type], node->id);
+  for (int t=0; t<NCCL_TOPO_NODE_TYPES; t++) {
+    if (node->paths[t] == NULL) continue;
+    for (int n = 0; n<system->nodes[t].count; n++) {
+      line[0] = 0;
+      int offset = 0;
+      for (int i=0; i<node->paths[t][n].count; i++) {
+        struct ncclTopoLink* link = node->paths[t][n].list[i];
+        struct ncclTopoNode* remNode = link->remNode;
+        snprintf(line+offset, linesize-offset, "--%s(%g)->%s/%lx-%lx", topoLinkTypeStr[link->type], link->bw, topoNodeTypeStr[remNode->type], NCCL_TOPO_ID_SYSTEM_ID(remNode->id), NCCL_TOPO_ID_LOCAL_ID(remNode->id));
+        offset = strlen(line);
+      }
+      INFO(NCCL_ALL, "%s (%f)", line, node->paths[t][n].bw);
 #endif
 }
 

@@ -948,7 +948,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
   }
   // AllGather1 - end
 
-  // MNNVL support
+  // MNNVL support - Multi-node NVLink (MNNVL) 
   if (nNodes > 1 && !checkMNNVL(comm) && ncclParamMNNVLEnable() == 1) {
     // Return an error if the user specifically requested MNNVL support
     WARN("MNNVL is not supported on this system");
