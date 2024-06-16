@@ -436,6 +436,7 @@ static ncclResult_t recvProxySetup(struct ncclProxyConnection* connection, struc
   if (respSize != sizeof(collNetHandle_t)) return ncclInternalError;
 
   INFO(NCCL_ALL, "---- (coll_net.cc) recvProxySetup -> sharedListen");
+  //apparently not used in our scenario
   NCCLCHECK(sharedListen(proxyState, req->netDev, req->collNet, netHandle));
   return ncclSuccess;
 }

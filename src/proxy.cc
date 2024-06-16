@@ -973,6 +973,7 @@ static ncclResult_t ncclProxyNewConnection(struct ncclProxyConnectionPool* pool,
 static ncclResult_t ncclProxyGetConnection(struct ncclProxyConnectionPool* pool, int id, struct ncclProxyConnection** conn) {
   int bank = id>>NCCL_PROXY_CONN_POOL_SIZE_POW2;
   int offset = id&NCCL_PROXY_CONN_POOL_MASK;
+  printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ncclProxyGetConnection\n");
   if ((pool->pools == NULL) || (bank > pool->banks) || (pool->pools[bank] == NULL)) return ncclInternalError;
   *conn = pool->pools[bank]+offset;
   return ncclSuccess;
