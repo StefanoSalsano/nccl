@@ -565,6 +565,7 @@ static ncclResult_t sendProxySetup(struct ncclProxyConnection* connection, struc
   struct setupReq* req = (struct setupReq*) reqBuff;
   if (reqSize != sizeof(struct setupReq)) return ncclInternalError;
 
+  INFO(NCCL_ALL, "---- (net.cc) sendProxySetup");
   struct sendNetResources* resources;
   NCCLCHECK(ncclCalloc(&resources, 1));
   connection->transportResources = resources;
@@ -657,6 +658,8 @@ static ncclResult_t sendProxyConnect(struct ncclProxyConnection* connection, str
   NCCLCHECK(ncclNetGetDeviceHandle(resources->netDeviceType, resources->netDeviceVersion, false /*isRecv*/, &resources->netDeviceHandle));
   if (resources->shared) {
     // Shared buffers
+    
+    INFO(NCCL_ALL, "---- sendProxyConnect (shared buffers)");
     struct ncclProxyProgressState* progressState = &proxyState->progressState;
     if (progressState->localPeers == NULL) {
       NCCLCHECK(ncclCalloc(&progressState->localPeers, proxyState->tpLocalnRanks));
@@ -669,6 +672,7 @@ static ncclResult_t sendProxyConnect(struct ncclProxyConnection* connection, str
 
     if (resources->maxRecvs > 1 && ncclParamNetSharedComms()) {
       // Connect or reuse connection for a netdev/remote rank.
+      INFO(NCCL_ALL, "---- sendProxyConnect (connect or reuse connection for a netdev/remote rank)");
       if (progressState->netComms[resources->netDev] == NULL) {
         NCCLCHECK(ncclCalloc(progressState->netComms + resources->netDev, proxyState->tpnRanks));
       }
@@ -677,10 +681,12 @@ static ncclResult_t sendProxyConnect(struct ncclProxyConnection* connection, str
       resources->netSendComm = comms->sendComm[resources->channelId];
       if (comms->sendComm[resources->channelId]) comms->sendRefCount[resources->channelId]++;
     } else {
+      INFO(NCCL_ALL, "---- sendProxyConnect (ELSE wrt connect or reuse connection for a netdev/remote rank)");
       ret = proxyState->ncclNet->connect(resources->netDev, req->handle, &resources->netSendComm, &resources->netDeviceHandle);
     }
   } else {
     // Connect to remote peer
+    INFO(NCCL_ALL, "---- sendProxyConnect (connect to remote peer)");
     ret = proxyState->ncclNet->connect(resources->netDev, req->handle, &resources->netSendComm, &resources->netDeviceHandle);
     connection->proxyAppendPtr = &connection->proxyAppend;
   }
