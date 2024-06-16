@@ -1437,6 +1437,7 @@ static ncclResult_t proxyServiceInitOp(int type, struct ncclProxyLocalPeer* peer
   asyncProxyOpEnqueue(peer, asyncOp);
 
   (*asyncOpCount)++;
+  INFO(NCCL_ALL,"proxyServiceInitOp -> proxyProgressAsync");
   NCCLCHECK(proxyProgressAsync(asyncOp, proxyState, asyncOpCount, peer, connectionPool));
   return ncclSuccess;
 }
