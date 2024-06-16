@@ -143,7 +143,6 @@ static void printNodePaths(struct ncclTopoSystem* system, struct ncclTopoNode* n
   INFO(NCCL_ALL, "%s", line);
 
   // repeating all the part done with ENABLE_TRACE hereafter
-
   INFO(NCCL_ALL, "Paths from %s/%lX :", topoNodeTypeStr[node->type], node->id);
   for (int t=0; t<NCCL_TOPO_NODE_TYPES; t++) {
     if (node->paths[t] == NULL) continue;
@@ -157,6 +156,7 @@ static void printNodePaths(struct ncclTopoSystem* system, struct ncclTopoNode* n
         offset = strlen(line);
       }
       INFO(NCCL_ALL, "%s (%f)", line, node->paths[t][n].bw);
+    }
 #endif
 }
 
