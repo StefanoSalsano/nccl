@@ -8,13 +8,7 @@
 #include "collectives.h"
 #include "primitives.h"
 
-#define ENABLE_OUT
-
-#ifdef ENABLE_OUT
-#define OUT(...) printf(__VA_ARGS__)
-#else
-#define OUT(...)
-#endif
+#include "define_out_printf.h"
 
 namespace {
   template<typename T, typename RedOp, typename Proto>

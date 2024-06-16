@@ -4,6 +4,8 @@
  * See LICENSE.txt for license information
  ************************************************************************/
 
+#include "define_out_printf.h"
+
 template<typename T, typename RedOp, typename Fan, int Direct, int P2p>
 class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
   public PrimitivesWithoutDirect<Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>> {
@@ -368,7 +370,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
 
   __device__ void send(intptr_t inpIx, int eltN) {
     int myi = blockIdx.x * blockDim.x + threadIdx.x;
-    printf ("thread: %d :GPU send inpIx %lu eltN %d \n",myi,inpIx,eltN);
+    OUT ("thread: %d :GPU send inpIx %lu eltN %d \n",myi,inpIx,eltN);
     return LLGenericOp<0, 1, Input, -1>(inpIx, -1, eltN, false);
   }
   __device__ void sendFromOutput(intptr_t outIx, int eltN) {
