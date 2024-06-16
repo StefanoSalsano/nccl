@@ -333,7 +333,7 @@ static ncclResult_t sharedListen(struct ncclProxyState* proxyState, int netDev, 
     collNet->resources = resources;
   }
   if (resources->collNetComms[netDev] == NULL){
-    printf("---- sendProxySetup -> listen\n");
+    INFO(NCCL_ALL, "---- sendProxySetup -> listen");
     NCCLCHECK(proxyState->ncclCollNet->listen(netDev, collNetHandle, resources->collNetListenComms + netDev));
   }
     
@@ -435,6 +435,7 @@ static ncclResult_t recvProxySetup(struct ncclProxyConnection* connection, struc
   collNetHandle_t* netHandle = (collNetHandle_t*) respBuff;
   if (respSize != sizeof(collNetHandle_t)) return ncclInternalError;
 
+  INFO(NCCL_ALL, "---- (coll_net.cc) recvProxySetup -> sharedListen");
   NCCLCHECK(sharedListen(proxyState, req->netDev, req->collNet, netHandle));
   return ncclSuccess;
 }
