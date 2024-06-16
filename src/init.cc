@@ -1031,6 +1031,8 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
   }
 
   // Determine local CollNet support
+  // STEFANO: we do not have local CollNet support
+  // 
   if (collNetSupport(comm)) {
     const char *collNetEnable = ncclGetEnv("NCCL_COLLNET_ENABLE");
     if (collNetEnable != NULL) {
@@ -1148,6 +1150,8 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
   comm->localRank = comm->rankToLocalRank[rank];
   comm->localRanks = comm->nodeRanks[comm->node].localRanks;
 
+  INFO(NCCL_ALL,"hostHash[%d] %lx localRank %d localRanks %d localRank0 %d",
+        rank, comm->peerInfo[rank].hostHash, comm->localRank, comm->localRanks, comm->localRankToRank[0]);
   TRACE(NCCL_INIT,"hostHash[%d] %lx localRank %d localRanks %d localRank0 %d",
         rank, comm->peerInfo[rank].hostHash, comm->localRank, comm->localRanks, comm->localRankToRank[0]);
   if (comm->localRank == -1 || comm->localRankToRank[0] == -1 || comm->localRanks == 0) {
@@ -1158,7 +1162,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
     goto fail;
   }
 
-  INFO(NCCL_INIT, "comm %p rank %d nRanks %d nNodes %d localRanks %d localRank %d MNNVL %d",
+  INFO(NCCL_ALL, "comm %p rank %d nRanks %d nNodes %d localRanks %d localRank %d MNNVL %d",
        comm, rank, comm->nRanks, comm->nNodes, comm->localRanks, comm->localRank, comm->MNNVL);
 
   nChannelsOrig = comm->nChannels;
@@ -1220,7 +1224,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
     struct ncclTree* tree = &comm->channels[c].tree;
     snprintf(line+strlen(line), 1023-strlen(line), " [%d] %d/%d/%d->%d->%d",
         c, tree->down[0], tree->down[1], tree->down[2], rank, tree->up);
-    INFO(NCCL_GRAPH, "Ring %02d : %d -> %d -> %d", c, comm->channels[c].ring.prev, comm->rank, comm->channels[c].ring.next);
+    INFO(NCCL_ALL, "Ring %02d : %d -> %d -> %d", c, comm->channels[c].ring.prev, comm->rank, comm->channels[c].ring.next);
   }
   line[1023] = '\0';
   INFO(NCCL_INIT, "Trees%s", line);
