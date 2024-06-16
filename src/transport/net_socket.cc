@@ -288,6 +288,8 @@ ncclResult_t ncclNetSocketListen(int dev, void* opaqueHandle, void** listenComm)
     return ncclInternalError;
   }
   printf("---------------------------ncclNetSocketListen\n");
+  INFO(NCCL_ALL, "------INFO ncclNetSocketListen");
+
   struct ncclNetSocketHandle* handle = (struct ncclNetSocketHandle*) opaqueHandle;
   memset(handle, 0, sizeof(struct ncclNetSocketHandle));
   static_assert(sizeof(struct ncclNetSocketHandle) <= NCCL_NET_HANDLE_MAXSIZE, "ncclNetSocketHandle size too large");
