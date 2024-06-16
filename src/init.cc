@@ -1044,6 +1044,9 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
   }
 
   // Determine local Nvls support
+  // NVLink SHARP (NVLS). NVLink SHARP is available in third-generation NVSwitch systems (NVLink4) 
+  // with Hopper and later GPU architectures, allowing collectives such as ncclAllReduce to be offloaded
+  // to the NVSwitch domain. NVLS will be disabled automatically on systems which do not support the feature
   NCCLCHECK(ncclNvlsInit(comm));
 
   // Get rings and trees
@@ -1122,6 +1125,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
       comm->nNodes++;
       nodesFirstRank[node] = firstRank;
       // Record tree pattern of each node as they can be different depending on sm arch
+      // (Streaming Multiprocessor architecture of NVIDIA GPUs)
       nodesTreePatterns[node] = allGather3Data[r].graphInfo[NCCL_ALGO_TREE].pattern;
     }
     comm->rankToNode[r] = node;
@@ -1301,12 +1305,13 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
   // Check if we can setup CollNet
   if (comm->collNetSupport > 0) collNetTrySetup(comm, parent, &collNetGraph);
 
-  TRACE(NCCL_INIT, "rank %d nranks %d - CONNECTED %d RINGS AND TREES", rank, nranks, comm->nChannels);
+  INFO(NCCL_INIT, "rank %d nranks %d - CONNECTED %d RINGS AND TREES", rank, nranks, comm->nChannels);
 
   // Compute time models for algorithm and protocol combinations
   NCCLCHECKGOTO(ncclTopoTuneModel(comm, comm->minCompCap, comm->maxCompCap, graphs), ret, fail);
 
-  INFO(NCCL_INIT, "%d coll channels, %d collnet channels, %d nvls channels, %d p2p channels, %d p2p channels per peer", comm->nChannels, comm->nChannels, comm->nvlsChannels, comm->p2pnChannels, comm->p2pnChannelsPerPeer);
+  INFO(NCCL_INIT, "%d coll channels, %d collnet channels, %d nvls channels, %d p2p channels, %d p2p channels per peer", 
+                   comm->nChannels, comm->nChannels, comm->nvlsChannels, comm->p2pnChannels, comm->p2pnChannelsPerPeer);
 
   do { // Setup p2p structures in comm->tasks
     struct ncclTasks* tasks = &comm->tasks;
