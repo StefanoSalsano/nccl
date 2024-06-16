@@ -283,6 +283,7 @@ int ncclTransportCollNetSetup(struct ncclComm* comm, struct ncclTopoGraph* collN
   peerInfo->rank = nranks;
 
   if (isMaster && type == collNetSend) {
+    INFO(NCCL_ALL, "ncclTransportCollNetSetup CollNet [send] : rank %d collNetRank %d collNetNranks %d received connect from rank %d", rank, comm->node, nMasters, masterPeer);
     TRACE(NCCL_INIT, "CollNet [send] : rank %d collNetRank %d collNetNranks %d received connect from rank %d", rank, comm->node, nMasters, masterPeer);
   }
 
