@@ -1461,6 +1461,7 @@ static bool proxyMatchOpType(int type) {
 
 void* ncclProxyService(void* _args) {
   struct ncclProxyState* proxyState =  (struct ncclProxyState*) _args;
+  INFO(NCCL_ALL, "ncclProxyService");
   // if (CPU_COUNT(&comm->cpuAffinity)) sched_setaffinity(0, sizeof(cpu_set_t), &comm->cpuAffinity);
   if (setProxyThreadContext(proxyState)) {
     INFO(NCCL_ALL, "ncclProxyService [Proxy Service] Created CUDA context on device %d", proxyState->cudaDev);
@@ -1705,10 +1706,12 @@ ncclResult_t ncclProxyCreate(struct ncclComm* comm) {
     proxyState->ncclCollNet = comm->ncclCollNet;
     memcpy(proxyState->buffSizes, comm->buffSizes, sizeof(comm->buffSizes));
 
+    INFO(NCCL_ALL, "ncclProxyCreate -> thread: ncclProxyService");
     pthread_create(&comm->proxyState->thread, NULL, ncclProxyService, comm->proxyState);
     ncclSetThreadName(comm->proxyState->thread, "NCCL Service %2d", comm->cudaDev);
 
     // UDS support
+    // User Defined Service
     INFO(NCCL_PROXY, "UDS: Creating service thread comm %p rank %d", comm, comm->rank);
     pthread_create(&comm->proxyState->threadUDS, NULL, ncclProxyServiceUDS, comm->proxyState);
     ncclSetThreadName(comm->proxyState->threadUDS, "NCCL UDS Service %2d", comm->cudaDev);

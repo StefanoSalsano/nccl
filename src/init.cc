@@ -523,6 +523,7 @@ static ncclResult_t fillInfo(struct ncclComm* comm, struct ncclPeerInfo* info, u
 
 static ncclResult_t setupChannel(struct ncclComm* comm, int channelId, int rank, int nranks, int* ringRanks) {
   TRACE(NCCL_INIT, "rank %d nranks %d", rank, nranks);
+  INFO(NCCL_ALL, "setupChannel : rank %d nranks %d", rank, nranks);
   NCCLCHECK(initChannel(comm, channelId));
 
   struct ncclRing* ring = &comm->channels[channelId].ring;
@@ -1247,9 +1248,11 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
 
   // Launch proxy service thread, after this, the proxy calls can be used.
   if (parent && parent->config.splitShare) {
+    INFO(NCCL_ALL, "initTransportsRank (launch proxy service thread) -> if branch");
     comm->proxyState = parent->sharedRes->proxyState;
     ncclAtomicRefCountIncrement(&parent->sharedRes->proxyState->refCount);
   } else {
+    INFO(NCCL_ALL, "initTransportsRank (launch proxy service thread) -> ncclProxyCreate ");
     NCCLCHECKGOTO(ncclProxyCreate(comm), ret, fail);
   }
 
@@ -1258,6 +1261,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
     struct ncclChannel* channel = comm->channels+c;
     NCCLCHECKGOTO(setupChannel(comm, c, rank, nranks, rings+c*nranks), ret, fail);
     if (comm->nRanks == 1) continue;
+
     NCCLCHECKGOTO(ncclTransportP2pConnect(comm, c, 1, &channel->ring.prev, 1, &channel->ring.next, 0), ret, fail);
   }
   NCCLCHECKGOTO(ncclTransportP2pSetup(comm, &ringGraph, 0), ret, fail);
