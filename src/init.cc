@@ -1257,15 +1257,18 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
   }
 
   // Connect with prev/next for each ring
+  INFO(NCCL_ALL, "initTransportsRank : connect with prev/next for each ring");
   for (int c=0; c<comm->nChannels; c++) {
     struct ncclChannel* channel = comm->channels+c;
     NCCLCHECKGOTO(setupChannel(comm, c, rank, nranks, rings+c*nranks), ret, fail);
+    
     if (comm->nRanks == 1) continue;
-
+    INFO(NCCL_ALL, "initTransportsRank -> ncclTransportP2pConnect");
     NCCLCHECKGOTO(ncclTransportP2pConnect(comm, c, 1, &channel->ring.prev, 1, &channel->ring.next, 0), ret, fail);
   }
+
   NCCLCHECKGOTO(ncclTransportP2pSetup(comm, &ringGraph, 0), ret, fail);
-  INFO(NCCL_INIT, "Connected all rings");
+  INFO(NCCL_ALL, "Connected all rings");
 
   // Connect Trees
   for (int c=0; c<comm->nChannels; c++) {
