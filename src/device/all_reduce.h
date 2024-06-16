@@ -8,6 +8,13 @@
 #include "collectives.h"
 #include "primitives.h"
 
+#define ENABLE_OUT
+
+#ifdef ENABLE_OUT
+#define OUT(...) printf(__VA_ARGS__)
+#else
+#define OUT(...)
+#endif
 
 namespace {
   template<typename T, typename RedOp, typename Proto>
@@ -47,7 +54,8 @@ namespace {
       nelem = (int)min(chunkCount, remCount - chunkOffset);
 
       int myi = blockIdx.x * blockDim.x + threadIdx.x;
-      printf("thread: %d : GPU chunk %d, chunkCount %lu offset %lu nelem %d\n",myi,chunk,chunkCount,offset,nelem);
+      //printf("thread: %d : GPU chunk %d, chunkCount %lu offset %lu nelem %d\n",myi,chunk,chunkCount,offset,nelem);
+      OUT("thread: %d : GPU chunk %d, chunkCount %lu offset %lu nelem %d\n",myi,chunk,chunkCount,offset,nelem);
       prims.send(offset, nelem);
 
       // k-2 steps: reduce and copy to next GPU
