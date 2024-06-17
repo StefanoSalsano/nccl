@@ -482,8 +482,10 @@ static ncclResult_t addCBDCollToPlan(
     // Add work elem
     *nWorkBudget += chans[c].nWork;
     if (regBufType == NCCL_REGULAR_BUFFER) {
+      INFO(NCCL_ALL,"NCCL_REGULAR_BUFFER");
       appendWorkElemColl(comm, plan, c, collInfo->workFuncIndex, &workElem);
     } else {
+      INFO(NCCL_ALL,"NOT NCCL_REGULAR_BUFFER");
       struct ncclWorkElemReg workElemReg;
       NCCLCHECKGOTO(initCollWorkElemReg(comm, &workElem, &comm->channels[c], regBufType, collInfo->regBufSend, collInfo->regBufRecv, &workElemReg), ret, fail);
       appendWorkElemColl(comm, plan, c, collInfo->workFuncIndex, &workElemReg);
