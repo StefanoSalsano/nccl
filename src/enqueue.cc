@@ -502,7 +502,10 @@ static ncclResult_t addCBDCollToPlan(
       //evaluate the number of steps given the collective function and the topology algorithm
       NCCLCHECKGOTO(computeCollSteps(collInfo, workCount, &steps), ret, fail);
       INFO(NCCL_ALL,"steps : %d", steps);
+
       NCCLCHECKGOTO(initCollProxyOp(collInfo, c, opCount, steps, &proxyOp), ret, fail);
+
+      // in our scenario the proxy operations are needed
       NCCLCHECKGOTO(addProxyOpIfNeeded(comm, plan, &proxyOp), ret, fail);
     }
 
@@ -1832,6 +1835,7 @@ static ncclResult_t computeCollChunkInfo(struct ncclInfo* collInfo, size_t nByte
   return ncclSuccess;
 }
 
+// initialize proxy operations transferring parameters from collInfo
 static ncclResult_t initCollProxyOp(struct ncclInfo* collInfo, int channelId, uint64_t opCount, uint32_t nsteps, struct ncclProxyOp* proxyOp) {
   proxyOp->nsteps = nsteps;
   proxyOp->sliceSteps = collInfo->sliceSteps;
