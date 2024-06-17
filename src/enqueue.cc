@@ -177,6 +177,7 @@ static ncclResult_t addProxyOpIfNeeded(struct ncclComm* comm, struct ncclKernelP
   bool needed = true;
   NCCLCHECK(ncclProxySaveOp(comm, op, &needed));
   if (needed) {
+    INFO(NCCL_ALL,"addProxyOpIfNeeded -> needed");
     struct ncclProxyOp* q = ncclMemoryPoolAlloc<struct ncclProxyOp>(&comm->memPool_ncclProxyOp, &comm->memPermanent);
     *q = *op; // C++ struct assignment
     ncclIntruQueueEnqueue(&plan->channels[op->channelId].proxyOpQueue, q);
