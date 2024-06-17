@@ -465,8 +465,9 @@ static ncclResult_t addCBDCollToPlan(
   //in our scenario we pass here
   NCCLCHECKGOTO(computeCollChunkInfo(collInfo, collInfo->aggnBytes, collInfo->nChannels), ret, fail);
   NCCLCHECKGOTO(computeCollAlignCount(collInfo, &alignCount), ret, fail);
-  INFO(NCCL_ALL,"alignCount %12li",alignCount);
+  INFO(NCCL_ALL,"alignCount %12li usableChannels %d",alignCount, usableChannels);
   NCCLCHECKGOTO(initCollWorkElem(collInfo, &workElem), ret, fail);
+
   for (int c = 0; c < usableChannels; c++) {
     if (plan->maxBytesPerChannel <= chans[c].collBytes) continue;
     if (workBytesTotal == 0) break;
@@ -475,6 +476,7 @@ static ncclResult_t addCBDCollToPlan(
     enqBytes = workCount * typeSize;
 
     NCCLCHECKGOTO(computeCollLastChunkInfo(collInfo, workCount, alignCount, &lastChunkCount), ret, fail);
+    //set workCount, workOffset, lastChunkCount in work element
     NCCLCHECKGOTO(setCollWorkElem(workCount, workOffset, lastChunkCount, &workElem), ret, fail);
 
     // Add work elem
@@ -517,13 +519,13 @@ static ncclResult_t addCBDCollToPlan(
   if (comm->rank == 0) {
     
     INFO(NCCL_ALL, "CBDColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, maxBytesPerChannel %ld, chunkCount %d, lastChunkCount %ld, funcIndex %d, nThreads %d",
-    collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm),
-    ncclProtoToString(collInfo->protocol), rnChannel, collInfo->count, collInfo->workBytes, usableChannels, plan->maxBytesPerChannel,
-    collInfo->chunkCount, lastChunkCount, collInfo->workFuncIndex, collInfo->nThreads);
+         collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm),
+         ncclProtoToString(collInfo->protocol), rnChannel, collInfo->count, collInfo->workBytes, usableChannels, plan->maxBytesPerChannel,
+         collInfo->chunkCount, lastChunkCount, collInfo->workFuncIndex, collInfo->nThreads);
     TRACE(NCCL_COLL, "CBDColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, maxBytesPerChannel %ld, chunkCount %d, lastChunkCount %ld, funcIndex %d, nThreads %d",
-    collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm),
-    ncclProtoToString(collInfo->protocol), rnChannel, collInfo->count, collInfo->workBytes, usableChannels, plan->maxBytesPerChannel,
-    collInfo->chunkCount, lastChunkCount, collInfo->workFuncIndex, collInfo->nThreads);
+         collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm),
+         ncclProtoToString(collInfo->protocol), rnChannel, collInfo->count, collInfo->workBytes, usableChannels, plan->maxBytesPerChannel,
+         collInfo->chunkCount, lastChunkCount, collInfo->workFuncIndex, collInfo->nThreads);
   }
 
 exit:
@@ -1720,6 +1722,7 @@ static ncclResult_t initCollWorkElem(struct ncclInfo* collInfo, struct ncclWorkE
   return ncclSuccess;
 }
 
+//set workCount, workOffset, lastChunkCount in work element
 static ncclResult_t setCollWorkElem(uint64_t workCount, uint64_t workOffset, size_t lastChunkCount, struct ncclWorkElem* work) {
   work->workCount = workCount;
   work->workOffset = workOffset;
