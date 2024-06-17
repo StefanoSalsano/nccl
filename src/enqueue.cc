@@ -465,7 +465,7 @@ static ncclResult_t addCBDCollToPlan(
   //in our scenario we pass here
   NCCLCHECKGOTO(computeCollChunkInfo(collInfo, collInfo->aggnBytes, collInfo->nChannels), ret, fail);
   NCCLCHECKGOTO(computeCollAlignCount(collInfo, &alignCount), ret, fail);
-  INFO(NCCL_ALL,"alignCount",alignCount);
+  INFO(NCCL_ALL,"alignCount %d",alignCount);
   NCCLCHECKGOTO(initCollWorkElem(collInfo, &workElem), ret, fail);
   for (int c = 0; c < usableChannels; c++) {
     if (plan->maxBytesPerChannel <= chans[c].collBytes) continue;
@@ -1705,7 +1705,7 @@ static ncclResult_t initCollWorkElem(struct ncclInfo* collInfo, struct ncclWorkE
   work->regUsed = 0;
   work->isUsed = 1;
 
-  INFO(NCCL_ALL,"initCollWorkElem count %d nWarps %d",work->count, work->nWarps);
+  INFO(NCCL_ALL,"initCollWorkElem count %12li nWarps %d",work->count, work->nWarps);
 
   if (collInfo->comm->nNodes == 1)
     work->oneNode = 1;
