@@ -47,6 +47,12 @@ ncclResult_t ncclAllReduce(const void* sendbuff, void* recvbuff, size_t count,
   NvtxParamsAllReduce payload{count * ncclTypeSize(datatype), op};
   NVTX3_FUNC_WITH_PARAMS(AllReduce, AllReduceSchema, payload)
 
+//#define NCCL_STEPS 8
+//#define ALLREDUCE_CHUNKSTEPS (NCCL_STEPS/2) 
+//#define ALLREDUCE_SLICESTEPS (NCCL_STEPS/4)
+//ALLREDUCE_CHUNKSTEPS = 4
+//ALLREDUCE_SLICESTEPS = 2
+
   struct ncclInfo info = { ncclFuncAllReduce, "AllReduce",
     sendbuff, recvbuff, count, datatype, op, 0, comm, stream, /* Args */
     ALLREDUCE_CHUNKSTEPS, ALLREDUCE_SLICESTEPS };

@@ -502,8 +502,9 @@ static ncclResult_t addCBDCollToPlan(
     rnChannel++;
   }
 
-  plan->threadPerBlock = std::max(plan->threadPerBlock, collInfo->nThreads);
+  //collInfo->nThreads represents the CUDA threads
   INFO(NCCL_ALL,"addCBDCollToPlan collInfo->nThreads = %d plan->threadPerBlock = %d",collInfo->nThreads,plan->threadPerBlock);
+  plan->threadPerBlock = std::max(plan->threadPerBlock, collInfo->nThreads);
   if (!plan->kernelSpecialized) {
     INFO(NCCL_ALL,"****addCBDCollToPlan -> set kernelFn");  //reached in our scenario
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
@@ -1810,6 +1811,8 @@ static ncclResult_t computeCollChunkInfo(struct ncclInfo* collInfo, size_t nByte
   collInfo->chunkSteps = chunkSteps;
   collInfo->sliceSteps = sliceSteps;
   collInfo->stepSize = stepSize;
+  INFO(NCCL_ALL,">>>>>>>>>>>> chunkSize %d chunkCount %d chunkSteps %d sliceSteps %d stepSize %d",
+                    chunkSize, collInfo->chunkCount, chunkSteps, sliceSteps, stepSize);
   return ncclSuccess;
 }
 
