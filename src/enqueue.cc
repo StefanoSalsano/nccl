@@ -184,6 +184,7 @@ static ncclResult_t addProxyOpIfNeeded(struct ncclComm* comm, struct ncclKernelP
   return ncclSuccess;
 }
 
+//evaluate the number of steps given the collective function and the topology algorithm
 static ncclResult_t computeCollSteps(struct ncclInfo* collInfo, size_t workCount, uint32_t* steps) {
   struct ncclComm* comm = collInfo->comm;
   if (collInfo->coll == ncclFuncAllReduce) {
@@ -497,7 +498,9 @@ static ncclResult_t addCBDCollToPlan(
     if (collInfo->nBytes != 0) {
       uint32_t steps;
       struct ncclProxyOp proxyOp;
+      //evaluate the number of steps given the collective function and the topology algorithm
       NCCLCHECKGOTO(computeCollSteps(collInfo, workCount, &steps), ret, fail);
+      INFO(NCCL_ALL,"steps : %d", steps);
       NCCLCHECKGOTO(initCollProxyOp(collInfo, c, opCount, steps, &proxyOp), ret, fail);
       NCCLCHECKGOTO(addProxyOpIfNeeded(comm, plan, &proxyOp), ret, fail);
     }
