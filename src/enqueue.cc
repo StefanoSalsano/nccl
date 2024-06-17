@@ -211,6 +211,7 @@ static ncclResult_t computeCollSteps(struct ncclInfo* collInfo, size_t workCount
   return ncclSuccess;
 }
 
+//set alignCount 
 static ncclResult_t computeCollAlignCount(struct ncclInfo* collInfo, size_t* alignCount) {
   if (collInfo->protocol == NCCL_PROTO_SIMPLE) {
     *alignCount = NCCL_SIMPLE_ALIGNMENT / ncclTypeSize(collInfo->datatype);
@@ -461,8 +462,10 @@ static ncclResult_t addCBDCollToPlan(
   size_t lastChunkCount;
   int rnChannel = 0;
 
+  //in our scenario we pass here
   NCCLCHECKGOTO(computeCollChunkInfo(collInfo, collInfo->aggnBytes, collInfo->nChannels), ret, fail);
   NCCLCHECKGOTO(computeCollAlignCount(collInfo, &alignCount), ret, fail);
+  INFO(NCCL_ALL,"alignCount",alignCount);
   NCCLCHECKGOTO(initCollWorkElem(collInfo, &workElem), ret, fail);
   for (int c = 0; c < usableChannels; c++) {
     if (plan->maxBytesPerChannel <= chans[c].collBytes) continue;
@@ -1689,6 +1692,7 @@ static ncclResult_t computeCollWorkFunc(struct ncclInfo* collInfo) {
   return ncclSuccess;
 }
 
+//initialize work element count, nWarps...
 static ncclResult_t initCollWorkElem(struct ncclInfo* collInfo, struct ncclWorkElem* work) {
   work->sendbuff = collInfo->sendbuff;
   work->recvbuff = collInfo->recvbuff;
@@ -1700,6 +1704,8 @@ static ncclResult_t initCollWorkElem(struct ncclInfo* collInfo, struct ncclWorkE
   work->chunkCount = collInfo->chunkCount;
   work->regUsed = 0;
   work->isUsed = 1;
+
+  INFO(NCCL_ALL,"initCollWorkElem count %d nWarps %d",work->count, work->nWarps);
 
   if (collInfo->comm->nNodes == 1)
     work->oneNode = 1;
@@ -1758,6 +1764,7 @@ static ncclResult_t initCollWorkElemReg(struct ncclComm* comm, struct ncclWorkEl
 
 NCCL_PARAM(NvlsTreeMaxChunkSize, "NVLSTREE_MAX_CHUNKSIZE", -2);
 
+// evaluates chunkSize, collInfo->chunkCount, chunkSteps, sliceSteps, stepSize
 static ncclResult_t computeCollChunkInfo(struct ncclInfo* collInfo, size_t nBytes, int nChannels) {
   int stepSize = collInfo->comm->buffSizes[collInfo->protocol] / NCCL_STEPS;
   int chunkSteps = (collInfo->protocol == NCCL_PROTO_SIMPLE && collInfo->algorithm == NCCL_ALGO_RING) ? collInfo->chunkSteps : 1;
@@ -1811,7 +1818,7 @@ static ncclResult_t computeCollChunkInfo(struct ncclInfo* collInfo, size_t nByte
   collInfo->chunkSteps = chunkSteps;
   collInfo->sliceSteps = sliceSteps;
   collInfo->stepSize = stepSize;
-  INFO(NCCL_ALL,">>>>>>>>>>>> chunkSize %d chunkCount %d chunkSteps %d sliceSteps %d stepSize %d",
+  INFO(NCCL_ALL,">>computeCollChunkInfo>> chunkSize %d chunkCount %d chunkSteps %d sliceSteps %d stepSize %d",
                     chunkSize, collInfo->chunkCount, chunkSteps, sliceSteps, stepSize);
   return ncclSuccess;
 }
