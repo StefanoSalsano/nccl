@@ -649,7 +649,7 @@ static ncclResult_t registerIntraNodeBuffers(
     struct ncclComm* comm, struct ncclKernelPlan* plan, struct ncclInfo* info
   ) {
 
-  //INFO(NCCL_ALL,"registerIntraNodeBuffers");
+  INFO(NCCL_ALL,"registerIntraNodeBuffers");
   ncclResult_t result = ncclSuccess;
   
   info->regBufType = NCCL_REGULAR_BUFFER;
