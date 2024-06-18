@@ -1683,7 +1683,7 @@ static ncclResult_t getChannnelThreadInfo(struct ncclInfo* collInfo) {
     nt = nt / WARP_SIZE < 3 ? 3 * WARP_SIZE : nt;
     collInfo->nThreads = nt;
   }
-
+  INFO(NCLL_ALL,"getChannnelThreadInfo collInfo->nThreads %d", collInfo->nThreads);
   return ncclSuccess;
 }
 
