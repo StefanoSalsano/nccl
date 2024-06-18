@@ -398,7 +398,7 @@ static ncclResult_t addTunedCollToPlan(
       }
     }
   }
-
+  //in our scenario we DO NOT pass here
   for (int bid = 0; bid < nChannels && remCount > 0; bid++) {
     int c = least[bid];
 
@@ -484,8 +484,10 @@ static ncclResult_t addCBDCollToPlan(
     workCount = std::min(DIVUP(DIVUP(enqBytes, typeSize), alignCount) * alignCount, workCountTotal);
     enqBytes = workCount * typeSize;
     INFO(NCCL_ALL,"alignCount %12li usableChannels %d enqBytes %12li workCount %12li",alignCount, usableChannels, enqBytes, workCount);
+    //alignCount 192 enqbytes=byte da trasferire workCount=dati da trasferire
     NCCLCHECKGOTO(computeCollLastChunkInfo(collInfo, workCount, alignCount, &lastChunkCount), ret, fail);
     //set workCount, workOffset, lastChunkCount in work element
+    INFO(NCCL_ALL,"workOffset %12li %12li lastChunkCount %12li", workOffset, lastChunkCount);
     NCCLCHECKGOTO(setCollWorkElem(workCount, workOffset, lastChunkCount, &workElem), ret, fail);
 
     // Add work elem
