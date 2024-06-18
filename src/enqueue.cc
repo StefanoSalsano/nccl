@@ -1666,6 +1666,8 @@ static ncclResult_t getChannnelThreadInfo(struct ncclInfo* collInfo) {
     nc = collInfo->nChannels;
   }
 
+  INFO(NCCL_ALL,"getChannnelThreadInfo collInfo->nThreads initial %d", collInfo->nThreads);
+  
   if (collInfo->nThreads == 0) {
     if (collInfo->algorithm != NCCL_ALGO_NVLS && collInfo->algorithm != NCCL_ALGO_NVLS_TREE &&
       collInfo->algorithm != NCCL_ALGO_COLLNET_DIRECT) {
@@ -1683,7 +1685,7 @@ static ncclResult_t getChannnelThreadInfo(struct ncclInfo* collInfo) {
     nt = nt / WARP_SIZE < 3 ? 3 * WARP_SIZE : nt;
     collInfo->nThreads = nt;
   }
-  INFO(NCCL_ALL,"getChannnelThreadInfo collInfo->nThreads %d", collInfo->nThreads);
+  INFO(NCCL_ALL,"getChannnelThreadInfo collInfo->nThreads final %d", collInfo->nThreads);
   return ncclSuccess;
 }
 
