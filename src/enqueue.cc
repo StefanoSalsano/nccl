@@ -830,8 +830,9 @@ static ncclResult_t scheduleCollTasksToPlan(
         nvlsSupport = comm->nvlsSupport && ncclNvlsSupported(aggInfo->opFull.op, aggInfo->datatype);
         NCCLCHECK(getCollNetSupport(aggInfo, &collNetSupport));
         NCCLCHECK(ncclInfoSetDerived(aggInfo, comm->nRanks));
-        NCCLCHECK(getTunerInfo(aggInfo, collNetSupport, nvlsSupport, 1));
+        NCCLCHECK(getTunerInfo(aggInfo, collNetSupport, nvlsSupport, 1)); //in our cas no tuner info
         NCCLCHECK(topoGetAlgoInfo(aggInfo, collNetSupport, nvlsSupport, 1));
+        INFO(NCCL_ALL,"AAAAAA aggInfo->protocol %d", aggInfo->protocol);
         NCCLCHECK(getChannnelThreadInfo(aggInfo)); //set channels and CUDA nThreads
         NCCLCHECK(computeCollWorkFunc(aggInfo));
         NCCLCHECK(getPatternInfo(aggInfo));
@@ -1804,14 +1805,11 @@ static ncclResult_t computeCollChunkInfo(struct ncclInfo* collInfo, size_t nByte
   int sliceSteps = (collInfo->protocol == NCCL_PROTO_SIMPLE && collInfo->algorithm == NCCL_ALGO_RING) ? collInfo->sliceSteps : 1;
   int chunkSize = stepSize * chunkSteps;
 
-  INFO(NCCL_ALL,"AAAAAAAAA 1 collInfo->protocol %d chunkSize %d chunkCount %d chunkSteps %d sliceSteps %d stepSize %d",
-                    collInfo->protocol, chunkSize, collInfo->chunkCount, chunkSteps, sliceSteps, stepSize);
+  //INFO(NCCL_ALL,"AAAAAA collInfo->protocol %d chunkSize %d chunkCount %d chunkSteps %d sliceSteps %d stepSize %d",
+  //                  collInfo->protocol, chunkSize, collInfo->chunkCount, chunkSteps, sliceSteps, stepSize);
 
   if (collInfo->protocol == NCCL_PROTO_LL) chunkSize /= 2;
   if (collInfo->protocol == NCCL_PROTO_LL128) chunkSize = (chunkSize / NCCL_LL128_LINEELEMS) * NCCL_LL128_DATAELEMS;
-
-    INFO(NCCL_ALL,"AAAAAAAAA 2 chunkSize %d chunkCount %d chunkSteps %d sliceSteps %d stepSize %d",
-                    chunkSize, collInfo->chunkCount, chunkSteps, sliceSteps, stepSize);
 
   if (collInfo->algorithm == NCCL_ALGO_COLLNET_DIRECT) {
     // Optimize chunkSize / nSteps
@@ -1857,8 +1855,8 @@ static ncclResult_t computeCollChunkInfo(struct ncclInfo* collInfo, size_t nByte
   collInfo->chunkSteps = chunkSteps;
   collInfo->sliceSteps = sliceSteps;
   collInfo->stepSize = stepSize;
-  INFO(NCCL_ALL,"AAAAAAAAAAAA>>computeCollChunkInfo>> chunkSize %d chunkCount %d chunkSteps %d sliceSteps %d stepSize %d",
-                    chunkSize, collInfo->chunkCount, chunkSteps, sliceSteps, stepSize);
+  INFO(NCCL_ALL,">>computeCollChunkInfo>> protocol %d chunkSize %d chunkCount %d chunkSteps %d sliceSteps %d stepSize %d",
+                    collInfo->protocol, chunkSize, collInfo->chunkCount, chunkSteps, sliceSteps, stepSize);
   return ncclSuccess;
 }
 
