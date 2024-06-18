@@ -487,7 +487,7 @@ static ncclResult_t addCBDCollToPlan(
     //alignCount 192 enqbytes=byte da trasferire workCount=dati da trasferire
     NCCLCHECKGOTO(computeCollLastChunkInfo(collInfo, workCount, alignCount, &lastChunkCount), ret, fail);
     //set workCount, workOffset, lastChunkCount in work element
-    INFO(NCCL_ALL,"workOffset %12li %12li lastChunkCount %12li", workOffset, lastChunkCount);
+    INFO(NCCL_ALL,"workOffset %12li lastChunkCount %12li", workOffset, lastChunkCount);
     NCCLCHECKGOTO(setCollWorkElem(workCount, workOffset, lastChunkCount, &workElem), ret, fail);
 
     // Add work elem
