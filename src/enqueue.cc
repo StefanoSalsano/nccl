@@ -1804,8 +1804,8 @@ static ncclResult_t computeCollChunkInfo(struct ncclInfo* collInfo, size_t nByte
   int sliceSteps = (collInfo->protocol == NCCL_PROTO_SIMPLE && collInfo->algorithm == NCCL_ALGO_RING) ? collInfo->sliceSteps : 1;
   int chunkSize = stepSize * chunkSteps;
 
-  INFO(NCCL_ALL,"AAAAAAAAA 1 chunkSize %d chunkCount %d chunkSteps %d sliceSteps %d stepSize %d",
-                    chunkSize, collInfo->chunkCount, chunkSteps, sliceSteps, stepSize);
+  INFO(NCCL_ALL,"AAAAAAAAA 1 collInfo->protocol %d chunkSize %d chunkCount %d chunkSteps %d sliceSteps %d stepSize %d",
+                    collInfo->protocol, chunkSize, collInfo->chunkCount, chunkSteps, sliceSteps, stepSize);
 
   if (collInfo->protocol == NCCL_PROTO_LL) chunkSize /= 2;
   if (collInfo->protocol == NCCL_PROTO_LL128) chunkSize = (chunkSize / NCCL_LL128_LINEELEMS) * NCCL_LL128_DATAELEMS;
