@@ -285,8 +285,8 @@ static ncclResult_t addCollnetCollToPlan(
   //in our scenario we DO NOT pass here
   NCCLCHECKGOTO(getCollnetLoopInfo(collInfo, &nstepsPerLoop, &nchunksPerLoop), ret, fail);
   nLoop = (int)DIVUP(collInfo->nBytes, (size_t)nChannels * nchunksPerLoop * collInfo->chunkSize);
-  INFO(NCCL_ALL,"addCollnetCollToPlan -> steps : %d", steps);
   steps = nstepsPerLoop * nLoop * collInfo->chunkSteps;
+  INFO(NCCL_ALL,"addCollnetCollToPlan -> steps : %d", steps);
 
   for (int bid = 0; bid < nChannels; bid++) {
     workElem.bid = bid;
