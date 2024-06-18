@@ -649,7 +649,7 @@ static ncclResult_t registerIntraNodeBuffers(
     struct ncclComm* comm, struct ncclKernelPlan* plan, struct ncclInfo* info
   ) {
 
-  INFO(NCCL_ALL,"registerIntraNodeBuffers");
+  //INFO(NCCL_ALL,"registerIntraNodeBuffers");
   ncclResult_t result = ncclSuccess;
   
   info->regBufType = NCCL_REGULAR_BUFFER;
@@ -658,6 +658,7 @@ static ncclResult_t registerIntraNodeBuffers(
     bool regBufUsed = false;
     const void *sendbuff = info->sendbuff;
     void *recvbuff = info->recvbuff;
+    INFO(NCCL_ALL,"registerIntraNodeBuffers -> first if true");
 
     if (info->coll == ncclFuncAllGather)
       sendbuff = NULL;
@@ -666,10 +667,12 @@ static ncclResult_t registerIntraNodeBuffers(
 
     /* first try local registration. */
     if (ncclParamLocalRegister()) {
+      INFO(NCCL_ALL,"registerIntraNodeBuffers -> ncclNvlsLocalRegisterBuffer");
       ncclNvlsLocalRegisterBuffer(comm, sendbuff, recvbuff, info->sendbuffSize, info->recvbuffSize, &regBufUsed, info->regBufSend, info->regBufRecv);
     }
 
     if (regBufUsed == false && plan->persistent && ncclParamGraphRegister()) {
+      INFO(NCCL_ALL,"registerIntraNodeBuffers -> ncclNvlsGraphRegisterBuffer");
       ncclNvlsGraphRegisterBuffer(comm, plan, sendbuff, recvbuff, info->sendbuffSize, info->recvbuffSize, &regBufUsed, info->regBufSend, info->regBufRecv);
     }
 
@@ -691,6 +694,8 @@ static ncclResult_t registerIntraNodeBuffers(
     comm->intraHighestTransportType == TRANSPORT_P2P && // only when all ranks can p2p each other
     comm->intraRanks < comm->localRanks &&  // only with inter-process & intra-node peers
     plan->persistent && 0) {
+
+    INFO(NCCL_ALL,"registerIntraNodeBuffers -> first elseif true");
     /* Disable CollnetDirect registration since it does not support cuMem* allocated memory. */
     int localRank = comm->localRank;
     cudaPointerAttributes sattr, rattr;
@@ -743,6 +748,8 @@ static ncclResult_t registerIntraNodeBuffers(
     int sendRegBufFlag = 0;
     int recvRegBufFlag = 0;
     void *sendHandle, *recvHandle;
+
+    INFO(NCCL_ALL,"registerIntraNodeBuffers -> second elseif true");
 
     if (ncclParamLocalRegister()) {
       ncclCollnetLocalRegisterBuffer(comm, info->sendbuff, info->sendbuffSize, collNetSend, &sendRegBufFlag, &sendHandle);
@@ -854,7 +861,7 @@ static ncclResult_t scheduleCollTasksToPlan(
 
             NCCLCHECK(getChannnelThreadInfo(nextInfo)); //set channels and CUDA nThreads
             // if possible, start registration 
-            INFO(NCCL_ALL,"scheduleCollTasksToPlan -> registerIntraNodeBuffers");
+            INFO(NCCL_ALL,"scheduleCollTasksToPlan -> registerIntraNodeBuffers"); //we pass here in our scenario
             registerIntraNodeBuffers(comm, plan, nextInfo);
             // accumulate channels
             accChannels += nextInfo->nChannels;
