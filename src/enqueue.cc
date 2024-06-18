@@ -832,7 +832,7 @@ static ncclResult_t scheduleCollTasksToPlan(
         NCCLCHECK(ncclInfoSetDerived(aggInfo, comm->nRanks));
         NCCLCHECK(getTunerInfo(aggInfo, collNetSupport, nvlsSupport, 1)); //in our cas no tuner info
         NCCLCHECK(topoGetAlgoInfo(aggInfo, collNetSupport, nvlsSupport, 1));
-        INFO(NCCL_ALL,"AAAAAA aggInfo->protocol %d", aggInfo->protocol);
+        //INFO(NCCL_ALL,"AAAAAA aggInfo->protocol %d", aggInfo->protocol);
         NCCLCHECK(getChannnelThreadInfo(aggInfo)); //set channels and CUDA nThreads
         NCCLCHECK(computeCollWorkFunc(aggInfo));
         NCCLCHECK(getPatternInfo(aggInfo));
@@ -1675,7 +1675,7 @@ static ncclResult_t getChannnelThreadInfo(struct ncclInfo* collInfo) {
     if (collInfo->algorithm != NCCL_ALGO_NVLS && collInfo->algorithm != NCCL_ALGO_NVLS_TREE &&
       collInfo->algorithm != NCCL_ALGO_COLLNET_DIRECT) {
       while (collInfo->nBytes < nc * nt * threadThreshold) {
-        if (nt % 128 == 0) nt /= 2;
+        if (nt % 128 == 0) nt /= 2; //if it is a multiple of 128, divide by 2
         else break;
       }
     }
@@ -1686,6 +1686,7 @@ static ncclResult_t getChannnelThreadInfo(struct ncclInfo* collInfo) {
       if (collInfo->algorithm == NCCL_ALGO_TREE) nt += 4*WARP_SIZE;
     }
     nt = nt / WARP_SIZE < 3 ? 3 * WARP_SIZE : nt;
+    nt = WARP_SIZE; //STEFANO TODO COMMENT THIS LINE!!!
     collInfo->nThreads = nt;
   }
   INFO(NCCL_ALL,"getChannnelThreadInfo collInfo->nThreads final %d", collInfo->nThreads);
