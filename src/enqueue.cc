@@ -320,6 +320,7 @@ static ncclResult_t addCollnetCollToPlan(
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[collInfo->workFuncIndex];
   }
+  //in our scenario we DO NOT pass here
   INFO(NCCL_ALL,
        "collnetColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, chunkCount %d, funcIndex %d, nThreads %d", 
                collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), 
@@ -363,6 +364,7 @@ static ncclResult_t addTunedCollToPlan(
   size_t countPerChannels;
   size_t remCount = collInfo->count;
 
+  //in our scenario we DO NOT pass here
   NCCLCHECKGOTO(computeCollAlignCount(collInfo, &alignCount), ret, fail);
   countPerChannels = DIVUP(DIVUP(collInfo->count, nChannels), alignCount) * alignCount;
   nChannels = DIVUP(collInfo->count, countPerChannels);
@@ -440,9 +442,13 @@ static ncclResult_t addTunedCollToPlan(
     plan->kernelFn = ncclDevKernelForFunc[collInfo->workFuncIndex];
     plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[collInfo->workFuncIndex];
   }
-
+  //in our scenario we DO NOT pass here
   if (comm->rank == 0) {
-    TRACE(NCCL_COLL, "tunedColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, chunkCount %d, lastChunkCount %ld, funcIndex %d, nThreads %d", collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype), ncclAlgoToString(collInfo->algorithm), ncclProtoToString(collInfo->protocol), rnChannels, collInfo->count, collInfo->workBytes, usableChannels, collInfo->chunkCount, lastChunkCount, collInfo->workFuncIndex, collInfo->nThreads);
+    TRACE(NCCL_COLL, "tunedColl enqueue coll %s(%s, %s, %s, %s), nChannels %d, count %ld (nbytes %ld), usableChannel %d, chunkCount %d, lastChunkCount %ld, funcIndex %d, nThreads %d", 
+         collInfo->opName, ncclOpToString(collInfo->op), ncclDatatypeToString(collInfo->datatype),
+         ncclAlgoToString(collInfo->algorithm), ncclProtoToString(collInfo->protocol), rnChannels, collInfo->count,
+         collInfo->workBytes, usableChannels, collInfo->chunkCount, lastChunkCount, collInfo->workFuncIndex,
+         collInfo->nThreads);
   }
 
 exit:
@@ -462,10 +468,10 @@ static ncclResult_t addCBDCollToPlan(
   size_t enqBytes;
   uint64_t opCount = uint64_t(plan->collOpCount++) << 1 | 0;
   size_t typeSize = ncclTypeSize(collInfo->datatype);
-  size_t workBytesTotal = collInfo->count * typeSize;
-  size_t workCountTotal = collInfo->count;
+  size_t workBytesTotal = collInfo->count * typeSize;  //target bytes to be transferred
+  size_t workCountTotal = collInfo->count;   //target data units to be transferred
   struct ncclWorkElem workElem;
-  size_t workOffset = 0;
+  size_t workOffset = 0; //needed if multiple usableChannels are used
   size_t workCount;
   ncclRegBufferType regBufType = collInfo->regBufType;
   size_t alignCount;
@@ -522,7 +528,7 @@ static ncclResult_t addCBDCollToPlan(
 
     workBytesTotal -= enqBytes;
     workCountTotal -= workCount;
-    chans[c].collBytes += enqBytes;
+    chans[c].collBytes += enqBytes;  //bytes trasferiti nel canale
     workOffset += workCount;
     rnChannel++;
   }
@@ -1719,7 +1725,7 @@ static ncclResult_t initCollWorkElem(struct ncclInfo* collInfo, struct ncclWorkE
   work->sendbuff = collInfo->sendbuff;
   work->recvbuff = collInfo->recvbuff;
   work->root = collInfo->root;
-  work->count = collInfo->count;
+  work->count = collInfo->count;  //target data units to be tranferred
   work->nWarps = collInfo->nThreads / WARP_SIZE;
   work->redOpArg = collInfo->opFull.scalarArg;
   work->redOpArgIsPtr = collInfo->opFull.scalarArgIsPtr;
