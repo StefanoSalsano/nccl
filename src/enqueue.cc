@@ -266,6 +266,8 @@ static ncclResult_t addCollnetCollToPlan(
     struct ncclComm* comm, struct ncclKernelPlan* plan, int usableChannels,
     struct ncclInfo* collInfo, int* nWorkBudget
   ) {
+  
+  //in our scenario we DO NOT pass here
   ncclResult_t ret = ncclSuccess;
   struct ncclKernelPlan::Channel *chans = plan->channels;
   struct ncclWorkElem workElem;
@@ -280,8 +282,10 @@ static ncclResult_t addCollnetCollToPlan(
   NCCLCHECKGOTO(initCollWorkElem(collInfo, &workElem), ret, fail);
   workElem.nChannels = nChannels;
 
+  //in our scenario we DO NOT pass here
   NCCLCHECKGOTO(getCollnetLoopInfo(collInfo, &nstepsPerLoop, &nchunksPerLoop), ret, fail);
   nLoop = (int)DIVUP(collInfo->nBytes, (size_t)nChannels * nchunksPerLoop * collInfo->chunkSize);
+  INFO(NCCL_ALL,"addCollnetCollToPlan (???) steps : %d", steps);
   steps = nstepsPerLoop * nLoop * collInfo->chunkSteps;
 
   for (int bid = 0; bid < nChannels; bid++) {
@@ -296,6 +300,8 @@ static ncclResult_t addCollnetCollToPlan(
       appendWorkElemColl(comm, plan, bid, collInfo->workFuncIndex, &workElemReg);
     }
     *nWorkBudget -= chans[bid].nWork; // subtract delta of chans[c].nWork
+
+    //in our scenario we DO NOT pass here
 
     // Add proxy task. Empty collectives do not make it to the proxy thread
     // since they don't imply synchronization for the user like p2p.
@@ -339,6 +345,7 @@ static ncclResult_t addTunedCollToPlan(
     struct ncclComm* comm, struct ncclKernelPlan* plan, int usableChannels,
     struct ncclInfo* collInfo, int* nWorkBudget
   ) {
+  //in our scenario we DO NOT pass here
   ncclResult_t ret = ncclSuccess;
   struct ncclKernelPlan::Channel *chans = plan->channels;
   struct ncclWorkElem workElem;
@@ -410,6 +417,7 @@ static ncclResult_t addTunedCollToPlan(
     }
     *nWorkBudget -= chans[c].nWork; // subtract delta of chans[c].nWork
 
+    //in our scenario we DO NOT pass here
     // Add proxy task. Empty collectives do not make it to the proxy thread
     // since they don't imply synchronization for the user like p2p.
     if (collInfo->nBytes != 0) {
@@ -467,7 +475,6 @@ static ncclResult_t addCBDCollToPlan(
   //in our scenario we pass here
   NCCLCHECKGOTO(computeCollChunkInfo(collInfo, collInfo->aggnBytes, collInfo->nChannels), ret, fail);
   NCCLCHECKGOTO(computeCollAlignCount(collInfo, &alignCount), ret, fail);
-  INFO(NCCL_ALL,"alignCount %12li usableChannels %d",alignCount, usableChannels);
   NCCLCHECKGOTO(initCollWorkElem(collInfo, &workElem), ret, fail);
 
   for (int c = 0; c < usableChannels; c++) {
@@ -476,7 +483,7 @@ static ncclResult_t addCBDCollToPlan(
     enqBytes = std::min(plan->maxBytesPerChannel - chans[c].collBytes, workBytesTotal);
     workCount = std::min(DIVUP(DIVUP(enqBytes, typeSize), alignCount) * alignCount, workCountTotal);
     enqBytes = workCount * typeSize;
-
+    INFO(NCCL_ALL,"alignCount %12li usableChannels %d enqBytes %d workCount %d",alignCount, usableChannels, enqBytes, workCount);
     NCCLCHECKGOTO(computeCollLastChunkInfo(collInfo, workCount, alignCount, &lastChunkCount), ret, fail);
     //set workCount, workOffset, lastChunkCount in work element
     NCCLCHECKGOTO(setCollWorkElem(workCount, workOffset, lastChunkCount, &workElem), ret, fail);
@@ -493,6 +500,8 @@ static ncclResult_t addCBDCollToPlan(
       appendWorkElemColl(comm, plan, c, collInfo->workFuncIndex, &workElemReg);
     }
     *nWorkBudget -= chans[c].nWork; // subtract delta of chans[c].nWork
+
+    //in our scenario we pass here
 
     // Add proxy task. Empty collectives do not make it to the proxy thread
     // since they don't imply synchronization for the user like p2p.
