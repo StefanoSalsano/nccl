@@ -651,7 +651,7 @@ static ncclResult_t registerIntraNodeBuffers(
 
   INFO(NCCL_ALL,"registerIntraNodeBuffers");
   ncclResult_t result = ncclSuccess;
-
+  
   info->regBufType = NCCL_REGULAR_BUFFER;
 #if CUDART_VERSION >= 11030
   if ((info->algorithm == NCCL_ALGO_NVLS || info->algorithm == NCCL_ALGO_NVLS_TREE) && comm->nvlsRegSupport) {
