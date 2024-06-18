@@ -1666,8 +1666,9 @@ static ncclResult_t getChannnelThreadInfo(struct ncclInfo* collInfo) {
     nc = collInfo->nChannels;
   }
 
-  INFO(NCCL_ALL,"getChannnelThreadInfo collInfo->nThreads initial %d", collInfo->nThreads);
-  
+  INFO(NCCL_ALL,"getChannnelThreadInfo collInfo->nThreads initial %d, threadThreshold",
+         collInfo->nThreads,threadThreshold);
+
   if (collInfo->nThreads == 0) {
     if (collInfo->algorithm != NCCL_ALGO_NVLS && collInfo->algorithm != NCCL_ALGO_NVLS_TREE &&
       collInfo->algorithm != NCCL_ALGO_COLLNET_DIRECT) {
