@@ -285,7 +285,7 @@ static ncclResult_t addCollnetCollToPlan(
   //in our scenario we DO NOT pass here
   NCCLCHECKGOTO(getCollnetLoopInfo(collInfo, &nstepsPerLoop, &nchunksPerLoop), ret, fail);
   nLoop = (int)DIVUP(collInfo->nBytes, (size_t)nChannels * nchunksPerLoop * collInfo->chunkSize);
-  INFO(NCCL_ALL,"addCollnetCollToPlan (???) steps : %d", steps);
+  INFO(NCCL_ALL,"addCollnetCollToPlan -> steps : %d", steps);
   steps = nstepsPerLoop * nLoop * collInfo->chunkSteps;
 
   for (int bid = 0; bid < nChannels; bid++) {
@@ -483,7 +483,7 @@ static ncclResult_t addCBDCollToPlan(
     enqBytes = std::min(plan->maxBytesPerChannel - chans[c].collBytes, workBytesTotal);
     workCount = std::min(DIVUP(DIVUP(enqBytes, typeSize), alignCount) * alignCount, workCountTotal);
     enqBytes = workCount * typeSize;
-    INFO(NCCL_ALL,"alignCount %12li usableChannels %d enqBytes %d workCount %d",alignCount, usableChannels, enqBytes, workCount);
+    INFO(NCCL_ALL,"alignCount %12li usableChannels %d enqBytes %12li workCount %12li",alignCount, usableChannels, enqBytes, workCount);
     NCCLCHECKGOTO(computeCollLastChunkInfo(collInfo, workCount, alignCount, &lastChunkCount), ret, fail);
     //set workCount, workOffset, lastChunkCount in work element
     NCCLCHECKGOTO(setCollWorkElem(workCount, workOffset, lastChunkCount, &workElem), ret, fail);
