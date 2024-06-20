@@ -1373,7 +1373,7 @@ int mycounter_proxyProgressAsync;
 static ncclResult_t proxyProgressAsync(struct ncclProxyAsyncOp* op, struct ncclProxyState* proxyState, int* asyncOpCount, struct ncclProxyLocalPeer* peer, struct ncclProxyConnectionPool* connectionPool) {
 
   if ((mycounter_proxyProgressAsync++ % 200) == 0) {
-    INFO(NCCL_ALL,"proxyProgressAsync counter : %d",mycounter);  
+    INFO(NCCL_ALL,"proxyProgressAsync counter : %d",mycounter_proxyProgressAsync);  
   }
 
   int done = 1;
