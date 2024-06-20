@@ -203,12 +203,11 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
           }
         }
 	if (ncclParamReportConnectProgress() && comm->rank == 0) {
-          INFO(NCCL_ALL,"**************************************************************");
           struct timeval now;
           gettimeofday(&now, NULL);
           if (((now.tv_sec - timeLast.tv_sec)*1.0 + (now.tv_usec-timeLast.tv_usec)*1e-6) > 1) {
             float elapsed = (now.tv_sec - timeStart.tv_sec)*1.0 + (now.tv_usec-timeStart.tv_usec)*1e-6;
-	    float remaining = elapsed*(comm->nRanks-done)/done;
+	          float remaining = elapsed*(comm->nRanks-done)/done;
             printf("%sP2p connect: %g%% Elapsed %d:%02d Remaining %d:%02d                                       ",
                 timeReported ? "\r" : "", done*100.0/comm->nRanks, ((int)elapsed)/60, ((int)elapsed)%60, ((int)remaining)/60, ((int)remaining)%60);
             fflush(stdout);
@@ -221,7 +220,7 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
     }
   }
 
-  if (timeReported) {
+  if (1 || timeReported) {
     struct timeval now;
     gettimeofday(&now, NULL);
     float elapsed = (now.tv_sec - timeStart.tv_sec)*1.0 + (now.tv_usec-timeStart.tv_usec)*1e-6;
