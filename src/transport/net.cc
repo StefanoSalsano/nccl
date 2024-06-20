@@ -1037,10 +1037,10 @@ static_assert(NCCL_STEPS <= NCCL_NET_MAX_REQUESTS, "Not enough net requests to c
 
 int mycounter =0;
 static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct ncclProxyArgs* args) {
-
+  
   //INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress counter : %d",mycounter++);
   if ((mycounter++ % 100) == 0) {
-    INFO(NCCL_ALL,"%d",mycounter);  
+    INFO(NCCL_ALL,"sendProxyProgress counter : %d",mycounter);  
   }
   if (args->state == ncclProxyOpReady) {
     for (int s=0; s<args->nsubs; s++) {
@@ -1064,7 +1064,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
   if (args->state == ncclProxyOpProgress) {
     int p = args->protocol;
     int maxDepth = std::min(NCCL_STEPS, NCCL_SHARED_STEPS/args->nsubs);
-    for (int s=0; s<args->nsubs; s++) {
+    for (int s=0; s < args->nsubs; s++) {
       struct ncclProxySubArgs* sub = args->subs+s;
       if (sub->done == sub->nsteps) continue;
       struct sendNetResources* resources = (struct sendNetResources*) (sub->connection->transportResources);
@@ -1120,6 +1120,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
               }
             }
           } else if (p == NCCL_PROTO_LL) {
+            INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress something to receive NCCL_PROTO_LL");
             uint32_t flag = NCCL_LL_FLAG(sub->base+sub->transmitted+1);
             int nFifoLines = DIVUP(size, sizeof(union ncclLLFifoLine));
             union ncclLLFifoLine* lines = (union ncclLLFifoLine*)buff;
