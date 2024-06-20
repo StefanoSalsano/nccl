@@ -302,6 +302,7 @@ exit:
   return ret;
 }
 
+// allocates resources for the communication
 static ncclResult_t commAlloc(struct ncclComm* comm, struct ncclComm* parent, int ndev, int rank) {
   if (ndev < 1) {
     WARN("invalid device count (%d) requested", ndev);
@@ -340,6 +341,7 @@ static ncclResult_t commAlloc(struct ncclComm* comm, struct ncclComm* parent, in
 
   comm->compCap = ncclCudaCompCap();
   TRACE(NCCL_INIT,"comm %p rank %d nranks %d cudaDev %d busId %lx compCap %d", comm, rank, ndev, comm->cudaDev, comm->busId, comm->compCap);
+  INFO(NCCL_ALL,"commAlloc: comm %p rank %d nranks %d cudaDev %d busId %lx compCap %d", comm, rank, ndev, comm->cudaDev, comm->busId, comm->compCap);
 
   comm->checkPointers = ncclParamCheckPointers() == 1 ? true : false;
   comm->dmaBufSupport = (dmaBufSupported(comm) == ncclSuccess) ? true : false;
@@ -560,7 +562,7 @@ static ncclResult_t computeBuffSizes(struct ncclComm* comm) {
 
   for (int p=0; p<NCCL_NUM_PROTOCOLS; p++) {
     comm->buffSizes[p] = envs[p] != -2 ? envs[p] : defaults[p];
-    INFO(NCCL_ALL,"setupChannel DEFAULT BUF SIZE %d",comm->buffSizes[p]);
+    INFO(NCCL_ALL,"in computeBuffSizes : DEFAULT BUF SIZE %d for protocol : %d",comm->buffSizes[p], p);
   }
 
   if (comm->nNodes > 1) comm->p2pChunkSize = ncclParamP2pNetChunkSize();
@@ -892,6 +894,7 @@ static int checkMNNVL(struct ncclComm* comm) {
 }
 #endif
 
+// inside this function there is the main initialization and setup phase
 static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* parent = NULL) {
   // We use 2 AllGathers
   // 1. { peerInfo, comm, compCap}
@@ -1563,6 +1566,7 @@ static ncclResult_t ncclCommInitRankFunc(struct ncclAsyncJob* job_) {
     comm, comm->rank, comm->nRanks, comm->cudaDev, comm->nvmlDev, comm->busId, (unsigned long long)hashUniqueId(job->commId));
   }
 
+  // inside this function there is the main initialization and setup phase
   NCCLCHECKGOTO(initTransportsRank(comm, job->parent), res, fail);
 
   NCCLCHECKGOTO(ncclTunerPluginLoad(&comm->tuner), res, fail);
