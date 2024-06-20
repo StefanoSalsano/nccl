@@ -319,7 +319,7 @@ static ncclResult_t commAlloc(struct ncclComm* comm, struct ncclComm* parent, in
   comm->nRanks = ndev;
 
   NCCLCHECK(ncclNetInit(comm));
-  INFO(NCCL_INIT, "Using network %s", comm->ncclNet->name);
+  INFO(NCCL_INIT, "Using network : %s", comm->ncclNet->name);
 
   if (parent && parent->config.splitShare) {
     if (parent->ncclNet != comm->ncclNet) {
@@ -1814,6 +1814,7 @@ static ncclResult_t ncclCommInitRankDev(ncclComm_t* newcomm, int nranks, ncclUni
   job->commId = commId; // C++ struct assignment
   job->myrank = myrank;
   job->cudaDev = cudaDev;
+  INFO(NCCL_ALL, "ncclCommInitRankDev ->  ncclCommInitRankFunc");
   NCCLCHECKGOTO(ncclAsyncLaunch(&job->base, ncclCommInitRankFunc, NULL, free, comm), res, fail);
 
 exit:

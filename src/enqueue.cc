@@ -649,7 +649,9 @@ static ncclResult_t registerIntraNodeBuffers(
     struct ncclComm* comm, struct ncclKernelPlan* plan, struct ncclInfo* info
   ) {
 
-  INFO(NCCL_ALL,"registerIntraNodeBuffers");
+  //INFO(NCCL_ALL,"registerIntraNodeBuffers");
+  //in our scenario, it enters here but it does not enter in any branch 
+
   ncclResult_t result = ncclSuccess;
   
   info->regBufType = NCCL_REGULAR_BUFFER;
@@ -862,7 +864,7 @@ static ncclResult_t scheduleCollTasksToPlan(
             NCCLCHECK(getChannnelThreadInfo(nextInfo)); //set channels and CUDA nThreads
             // if possible, start registration 
             INFO(NCCL_ALL,"scheduleCollTasksToPlan -> registerIntraNodeBuffers"); //we pass here in our scenario
-            registerIntraNodeBuffers(comm, plan, nextInfo);
+            registerIntraNodeBuffers(comm, plan, nextInfo);  ////in our scenario, it enters here but it does not enter in any branch 
             // accumulate channels
             accChannels += nextInfo->nChannels;
             nextInfo = nextInfo->next;
