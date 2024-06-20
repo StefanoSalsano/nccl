@@ -1035,12 +1035,13 @@ static ncclResult_t recvProxyFree(struct ncclProxyConnection* connection, struct
 static_assert(NCCL_STEPS <= NCCL_NET_MAX_REQUESTS, "Not enough net requests to cover for steps");
 #define MAX_NET_SIZE (1024*1024*1024L) // Rather than send INT_MAX which is 2G-1, send a power of two.
 
-int mycounter =0;
+int mycounter_send =0;
+// in this function we are receiving data from the GPU and we are sending the data in a channel/socket
 static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct ncclProxyArgs* args) {
   
-  //INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress counter : %d",mycounter++);
-  if ((mycounter++ % 100) == 0) {
-    INFO(NCCL_ALL,"sendProxyProgress counter : %d",mycounter);  
+  //INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress counter : %d",mycounter_send++);
+  if ((mycounter_send++ % 100) == 0) {
+    INFO(NCCL_ALL,"sendProxyProgress counter : %d",mycounter_send);  
   }
   if (args->state == ncclProxyOpReady) {
     for (int s=0; s<args->nsubs; s++) {
@@ -1120,7 +1121,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
               }
             }
           } else if (p == NCCL_PROTO_LL) {
-            if ((mycounter % 100) == 0) {
+            if ((mycounter_send % 100) == 0) {
               //INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress something to receive NCCL_PROTO_LL");
             }
             uint32_t flag = NCCL_LL_FLAG(sub->base+sub->transmitted+1);
@@ -1137,10 +1138,14 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
           if (ready) {
             //INFO(NCCL_ALL,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO ");
             // Data is ready, try to send.
+
+            //proxyState->ncclNet->isend is implemented by ncclNetSocketIsend in net_socket.cc
             NCCLCHECK(proxyState->ncclNet->isend(resources->netSendComm, buff, size, resources->tpRank, sub->mhandle, sub->requests+buffSlot));
             if (sub->requests[buffSlot] != NULL) {
-              INFO(NCCL_ALL, "sendProxyProgress ready sendProxy [%ld/%d] Isend posted, req %p, size %d, proto %d, myRank %d, channelId %d", sub->transmitted, buffSlot, sub->requests[buffSlot], size, p, proxyState->tpRank, sub->channelId);
-              TRACE(NCCL_NET, "sendProxy [%ld/%d] Isend posted, req %p, size %d, proto %d, myRank %d, channelId %d", sub->transmitted, buffSlot, sub->requests[buffSlot], size, p, proxyState->tpRank, sub->channelId);
+              INFO(NCCL_ALL, "sendProxyProgress ready sendProxy [%ld/%d] Isend posted, req %p, size %d, proto %d, myRank %d, channelId %d",
+                      sub->transmitted, buffSlot, sub->requests[buffSlot], size, p, proxyState->tpRank, sub->channelId);
+              TRACE(NCCL_NET, "sendProxy [%ld/%d] Isend posted, req %p, size %d, proto %d, myRank %d, channelId %d",
+                      sub->transmitted, buffSlot, sub->requests[buffSlot], size, p, proxyState->tpRank, sub->channelId);
               sub->transmitted += args->sliceSteps;
               for (uint64_t step=sub->transmitted-args->sliceSteps; step<sub->transmitted; step++) ncclProfilingRecord(args, s, step, ncclProxyProfileSendWait);
               args->idle = 0;
@@ -1204,9 +1209,16 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
   return ncclSuccess;
 }
 
+int mycounter_recv =0;
+
+// in this function we are receiving data from a channel/socket and we are writing the to the GPU
 static ncclResult_t recvProxyProgress(struct ncclProxyState* proxyState, struct ncclProxyArgs* args) {
 
-  INFO(NCCL_ALL,"########################################## recvProxyProgress");
+  //INFO(NCCL_ALL,"########################################## recvProxyProgress");
+  if ((mycounter_recv++ % 100) == 0) {
+    INFO(NCCL_ALL,"recvProxyProgress counter : %d",mycounter_recv);  
+  }
+
   if (args->state == ncclProxyOpReady) {
     // Initialize subs and group them by same recvComm.
     void* recvComm;
