@@ -414,7 +414,9 @@ static ncclResult_t sharedBuffersDestroy(struct ncclCollNetSharedRes* collNet) {
   return ncclSuccess;
 }
 
-static ncclResult_t recvProxySetup(struct ncclProxyConnection* connection, struct ncclProxyState* proxyState, void* reqBuff, int reqSize, void* respBuff, int respSize, int* done) {
+//same function in net.cc (here we are in coll_net.cc), this function is not used in our basic scenario
+static ncclResult_t recvProxySetup(struct ncclProxyConnection* connection, struct ncclProxyState* proxyState, 
+                                   void* reqBuff, int reqSize, void* respBuff, int respSize, int* done) {
   struct setupReq* req = (struct setupReq*)reqBuff;
   if (reqSize != sizeof (struct setupReq)) return ncclInternalError;
 

@@ -1459,6 +1459,7 @@ static bool proxyMatchOpType(int type) {
   }
 }
 
+// proxy service
 void* ncclProxyService(void* _args) {
   struct ncclProxyState* proxyState =  (struct ncclProxyState*) _args;
   INFO(NCCL_ALL, "ncclProxyService first line");
@@ -1483,6 +1484,7 @@ void* ncclProxyService(void* _args) {
     pollfds[s].fd = -1;
     pollfds[s].events = POLLHUP|POLLIN;
   }
+  //listenSock is initialized in boostrapInit
   if (ncclSocketGetFd(proxyState->listenSock, &pollfds[NCCL_MAX_LOCAL_RANKS].fd) != ncclSuccess) {
     WARN("[Proxy Service] Get listenSock fd fails");
     return NULL;
@@ -1515,6 +1517,7 @@ void* ncclProxyService(void* _args) {
         return NULL;
       }
       if (maxnpeers < s+1) maxnpeers = s+1;
+      // initialize socket for peer s
       if (ncclSocketInit(&peers[s].sock) != ncclSuccess) {
         WARN("[Service thread] Initialize peers[%d].sock fails", s);
         return NULL;
