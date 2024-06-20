@@ -1098,7 +1098,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
         uint64_t tail = sub->base + (sub->reg ? 0 : sub->transmitted);
         if ((sub->reg || connFifo[buffSlot].size != -1) && ((*recvTail > tail) || p == NCCL_PROTO_LL)) {
           // We have something to receive, let's check if it's completely ready.
-          INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress something to receive");
+          //INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress something to receive");
           int size = sub->reg ? std::min(MAX_NET_SIZE, sub->nbytes) : connFifo[buffSlot].size;
           bool shared = (p == NCCL_PROTO_SIMPLE) && resources->shared;
           char* buff = shared ? localBuff+connFifo[buffSlot].offset : localBuff+buffSlot*stepSize;
