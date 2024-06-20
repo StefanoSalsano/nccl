@@ -1284,6 +1284,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
 
   //we pass here in our scenario
   NCCLCHECKGOTO(ncclTransportP2pSetup(comm, &ringGraph, 0), ret, fail);
+  INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE------------------------>");
   INFO(NCCL_ALL, "Connected all rings");
 
   // Connect Trees
@@ -1295,6 +1296,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
   }
   //we pass here in our scenario
   NCCLCHECKGOTO(ncclTransportP2pSetup(comm, &treeGraph, 0), ret, fail);
+  INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE------------------------>");
   INFO(NCCL_INIT, "Connected all trees");
 
   // Setup NVLS
@@ -1387,8 +1389,9 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
       }
     }
 
-    INFO(NCCL_ALL,"initTransportsRank FINAL ncclTransportP2pSetup");
+    INFO(NCCL_ALL,"initTransportsRank FINAL ncclTransportP2pSetup"); // we pass here
     NCCLCHECKGOTO(ncclTransportP2pSetup(comm, NULL, 1), ret, fail);
+    INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE------------------------>");
   }
 
   // Connect to local net proxy
