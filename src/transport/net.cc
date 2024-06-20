@@ -1224,7 +1224,7 @@ static ncclResult_t recvProxyProgress(struct ncclProxyState* proxyState, struct 
     void* recvComm;
     int groupSize = 0;
     int maxRecvs = 1;
-    for (int s=0; s<args->nsubs; s++) {
+    for (int s=0; s < args->nsubs; s++) {
       struct ncclProxySubArgs* sub = args->subs+s;
       if (groupSize == maxRecvs) {
         groupSize = 0;
