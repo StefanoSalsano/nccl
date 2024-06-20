@@ -1148,6 +1148,9 @@ error:
 
 const char* ncclProxyMsgTypeStr[] = { "Unknown", "Init", "SharedInit", "Setup", "Connect", "Start", "Close", "Abort", "Stop", "GetFd" };
 ncclResult_t ncclProxyCallAsync(struct ncclComm* comm, struct ncclProxyConnector* proxyConn, int type, void* reqBuff, int reqSize, int respSize, void* opId) {
+  
+  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ncclProxyCallAsync");
+  
   struct ncclSocket* sock;
   ncclResult_t ret = ncclSuccess;
   struct ncclProxyState* sharedProxyState = comm->proxyState;
