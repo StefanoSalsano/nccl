@@ -39,6 +39,7 @@ static ncclResult_t selectTransport(struct ncclComm* comm, struct ncclTopoGraph*
   return ncclSystemError;
 }
 
+// connect with previous and next node in RING or TREE
 ncclResult_t ncclTransportP2pConnect(struct ncclComm* comm, int channelId, int nrecv, int* peerRecv, int nsend, int* peerSend, int connIndex) {
   TRACE(NCCL_INIT, "nsend %d nrecv %d", nsend, nrecv);
   INFO(NCCL_ALL,"ncclTransportP2pConnect : nsend %d nrecv %d", nsend, nrecv);
@@ -67,9 +68,10 @@ void dumpData(struct ncclConnect* data, int ndata) {
 }
 
 NCCL_PARAM(ConnectRoundMaxPeers, "CONNECT_ROUND_MAX_PEERS", 128);
-NCCL_PARAM(ReportConnectProgress, "REPORT_CONNECT_PROGRESS", 0);
+NCCL_PARAM(ReportConnectProgress, "REPORT_CONNECT_PROGRESS", 1);
 #include <sys/time.h>
 
+// opens the connections, waits and connects
 ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* graph, int connIndex, int* highestTransportType/*=NULL*/) {
   INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------START------------------------>");
   
