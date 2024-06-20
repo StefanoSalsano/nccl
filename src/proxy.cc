@@ -1368,9 +1368,13 @@ error:
 #endif
 }
 
+int mycounter_proxyProgressAsync;
+
 static ncclResult_t proxyProgressAsync(struct ncclProxyAsyncOp* op, struct ncclProxyState* proxyState, int* asyncOpCount, struct ncclProxyLocalPeer* peer, struct ncclProxyConnectionPool* connectionPool) {
 
-  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX proxyProgressAsync");
+  if ((mycounter_proxyProgressAsync++ % 200) == 0) {
+    INFO(NCCL_ALL,"proxyProgressAsync counter : %d",mycounter);  
+  }
 
   int done = 1;
   ncclResult_t res = ncclInternalError;
