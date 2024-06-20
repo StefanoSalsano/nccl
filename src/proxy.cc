@@ -1178,8 +1178,9 @@ error:
 }
 
 ncclResult_t ncclPollProxyResponse(struct ncclComm* comm, struct ncclProxyConnector* proxyConn, void* respBuff, void* opId) {
-
-  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ncclPollProxyResponse");
+  
+  // called multiple times during the setup phase
+  //INFO(NCCL_ALL,"XXXXXXXXXXXX ncclPollProxyResponse");
   struct ncclProxyState* sharedProxyState = comm->proxyState;
   // Receive the connection pointer from the Proxy
   if (__atomic_load_n(comm->abortFlag, __ATOMIC_RELAXED)) {

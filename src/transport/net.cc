@@ -1035,9 +1035,10 @@ static ncclResult_t recvProxyFree(struct ncclProxyConnection* connection, struct
 static_assert(NCCL_STEPS <= NCCL_NET_MAX_REQUESTS, "Not enough net requests to cover for steps");
 #define MAX_NET_SIZE (1024*1024*1024L) // Rather than send INT_MAX which is 2G-1, send a power of two.
 
+int mycounter =0;
 static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct ncclProxyArgs* args) {
 
-  INFO(NCCL_ALL,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO sendProxyProgress");
+  INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress counter : %d",mycounter++);
   if (args->state == ncclProxyOpReady) {
     for (int s=0; s<args->nsubs; s++) {
       struct ncclProxySubArgs* sub = args->subs+s;
@@ -1097,6 +1098,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
         uint64_t tail = sub->base + (sub->reg ? 0 : sub->transmitted);
         if ((sub->reg || connFifo[buffSlot].size != -1) && ((*recvTail > tail) || p == NCCL_PROTO_LL)) {
           // We have something to receive, let's check if it's completely ready.
+          INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress something to receive");
           int size = sub->reg ? std::min(MAX_NET_SIZE, sub->nbytes) : connFifo[buffSlot].size;
           bool shared = (p == NCCL_PROTO_SIMPLE) && resources->shared;
           char* buff = shared ? localBuff+connFifo[buffSlot].offset : localBuff+buffSlot*stepSize;
@@ -1127,7 +1129,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
             buff = sub->reg ? (char*)sub->recvbuff : localBuff+resources->recvMem->connFifo[buffSlot].offset;
           }
           if (ready) {
-            INFO(NCCL_NET,"########################################## Ready");
+            INFO(NCCL_NET,"OOOOOOOOOOOOOO sendProxyProgress ready");
             // Data is ready, try to send.
             NCCLCHECK(proxyState->ncclNet->isend(resources->netSendComm, buff, size, resources->tpRank, sub->mhandle, sub->requests+buffSlot));
             if (sub->requests[buffSlot] != NULL) {
