@@ -1120,7 +1120,9 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
               }
             }
           } else if (p == NCCL_PROTO_LL) {
-            INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress something to receive NCCL_PROTO_LL");
+            if ((mycounter % 50) == 0) {
+              INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress something to receive NCCL_PROTO_LL");
+            }
             uint32_t flag = NCCL_LL_FLAG(sub->base+sub->transmitted+1);
             int nFifoLines = DIVUP(size, sizeof(union ncclLLFifoLine));
             union ncclLLFifoLine* lines = (union ncclLLFifoLine*)buff;
@@ -1133,7 +1135,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
             buff = sub->reg ? (char*)sub->recvbuff : localBuff+resources->recvMem->connFifo[buffSlot].offset;
           }
           if (ready) {
-            INFO(NCCL_NET,"OOOOOOOOOOOOOO sendProxyProgress ready");
+            INFO(NCCL_NET,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO sendProxyProgress ready");
             // Data is ready, try to send.
             NCCLCHECK(proxyState->ncclNet->isend(resources->netSendComm, buff, size, resources->tpRank, sub->mhandle, sub->requests+buffSlot));
             if (sub->requests[buffSlot] != NULL) {
