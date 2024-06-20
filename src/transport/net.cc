@@ -1172,6 +1172,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
           // Make sure size is reset to -1 before we update the head.
           if (sub->reg == 0) connFifo[buffSlot].size = -1;
           __sync_synchronize();
+          INFO(NCCL_ALL, "sendProxy [%ld/%d] request %p done", sub->done, buffSlot, sub->requests[buffSlot]);
           TRACE(NCCL_NET, "sendProxy [%ld/%d] request %p done", sub->done, buffSlot, sub->requests[buffSlot]);
           sub->done += args->sliceSteps;
           for (uint64_t step=sub->done-args->sliceSteps; step<sub->done; step++) ncclProfilingRecord(args, s, step, ncclProxyProfileEnd);
@@ -1205,7 +1206,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
 
 static ncclResult_t recvProxyProgress(struct ncclProxyState* proxyState, struct ncclProxyArgs* args) {
 
-  INFO(NCCL_NET,"########################################## recvProxyProgress");
+  INFO(NCCL_ALL,"########################################## recvProxyProgress");
   if (args->state == ncclProxyOpReady) {
     // Initialize subs and group them by same recvComm.
     void* recvComm;
