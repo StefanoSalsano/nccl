@@ -1387,7 +1387,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
       }
     }
 
-    INFO(NCCL_ALL("initTransportsRank FINAL ncclTransportP2pSetup"));
+    INFO(NCCL_ALL,"initTransportsRank FINAL ncclTransportP2pSetup");
     NCCLCHECKGOTO(ncclTransportP2pSetup(comm, NULL, 1), ret, fail);
   }
 
