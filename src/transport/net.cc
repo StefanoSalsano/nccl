@@ -1120,7 +1120,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
               }
             }
           } else if (p == NCCL_PROTO_LL) {
-            if ((mycounter % 50) == 0) {
+            if ((mycounter % 100) == 0) {
               INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress something to receive NCCL_PROTO_LL");
             }
             uint32_t flag = NCCL_LL_FLAG(sub->base+sub->transmitted+1);
