@@ -1036,6 +1036,8 @@ static_assert(NCCL_STEPS <= NCCL_NET_MAX_REQUESTS, "Not enough net requests to c
 #define MAX_NET_SIZE (1024*1024*1024L) // Rather than send INT_MAX which is 2G-1, send a power of two.
 
 static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct ncclProxyArgs* args) {
+
+  INFO(NCCL_ALL,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO sendProxyProgress");
   if (args->state == ncclProxyOpReady) {
     for (int s=0; s<args->nsubs; s++) {
       struct ncclProxySubArgs* sub = args->subs+s;
