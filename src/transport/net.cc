@@ -1151,6 +1151,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
       }
       // Check whether the network has completed some send operations.
       if (sub->done < sub->transmitted) {
+        INFO(NCCL_ALL,"OOOOOOOOOO sendProxyProgress the network has completed some send operations");
         int done;
         int size;
         int buffSlot = (sub->base+sub->done)%NCCL_STEPS;
