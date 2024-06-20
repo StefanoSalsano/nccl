@@ -1039,8 +1039,8 @@ int mycounter =0;
 static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct ncclProxyArgs* args) {
 
   //INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress counter : %d",mycounter++);
-  if (mycounter % 100 == 0) {
-    INFO(NCCL_ALL,"%d",mycounter++);  
+  if ((mycounter++ % 100) == 0) {
+    INFO(NCCL_ALL,"%d",mycounter);  
   }
   if (args->state == ncclProxyOpReady) {
     for (int s=0; s<args->nsubs; s++) {
