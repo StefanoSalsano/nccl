@@ -203,7 +203,7 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
           }
         }
 	if (ncclParamReportConnectProgress() && comm->rank == 0) {
-          INFO(NCCL_ALL,"**************************************************************")
+          INFO(NCCL_ALL,"**************************************************************");
           struct timeval now;
           gettimeofday(&now, NULL);
           if (((now.tv_sec - timeLast.tv_sec)*1.0 + (now.tv_usec-timeLast.tv_usec)*1e-6) > 1) {
