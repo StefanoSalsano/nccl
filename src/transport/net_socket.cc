@@ -426,6 +426,8 @@ ncclResult_t ncclNetSocketGetRequest(struct ncclNetSocketComm* comm, int op, voi
 }
 
 ncclResult_t ncclNetSocketGetTask(struct ncclNetSocketComm* comm, int op, void* data, int size, struct ncclNetSocketTask** req) {
+
+  INFO(NCCL_ALL, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketGetTask ");
   int tid = comm->nextSock % comm->nThreads;
   struct ncclNetSocketThreadResources* res = comm->threadResources+tid;
   struct ncclNetSocketTaskQueue* queue = &res->threadTaskQueue;

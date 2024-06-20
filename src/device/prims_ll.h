@@ -87,6 +87,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
     if (recvConnHeadPtr) *recvConnHeadPtr = recvConnHead += 1;
   }
 
+  // called in case of send 
   inline __device__ void incSend(int i, int offset) {
     // LL Cleanup : write all flags in the slice to make sure we don't have
     // data corruption when flag loops over.
@@ -96,7 +97,9 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
     sendStep[i]++;
   }
 
-  __device__ uint64_t readLL(int offset, int i) {
+  // this is called in case of recv
+  // blocking read (spinning) on 64bytes written by a remote node
+  __device__ uint64_t readLL(int offset, int i) {  
     union ncclLLFifoLine* src = recvPtr(i) + offset;
     uint32_t flag = recvFlag(i);
     uint32_t data1, flag1, data2, flag2;
@@ -131,6 +134,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
     return val64;
   }
 
+  // this is called in case of send
   __device__ void storeLL(union ncclLLFifoLine* dst, uint64_t val, uint32_t flag) {
     asm volatile("st.volatile.global.v4.u32 [%0], {%1,%2,%3,%4};" :: "l"(&dst->i4), "r"((uint32_t)val), "r"(flag), "r"((uint32_t)(val >> 32)), "r"(flag));
   }
@@ -369,8 +373,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
   }
 
   __device__ void send(intptr_t inpIx, int eltN) {
-  
-    OUT ("thread: %d :GPU send inpIx %lu eltN %d \n",blockIdx.x * blockDim.x + threadIdx.x,inpIx,eltN);
+      OUT ("thread: %d :GPU send inpIx %lu eltN %d \n",blockIdx.x * blockDim.x + threadIdx.x,inpIx,eltN);
     return LLGenericOp<0, 1, Input, -1>(inpIx, -1, eltN, false);
   }
   __device__ void sendFromOutput(intptr_t outIx, int eltN) {
