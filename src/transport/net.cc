@@ -1164,6 +1164,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
               sub->nsteps++;
             } else {
               // Signal the GPU the send is complete and it can return.
+              INFO(NCCL_ALL,"OOOOOOOOOO sendProxyProgress Signal the GPU the send is complete and it can return");
               connFifo[sub->base%NCCL_STEPS].size = -1;
             }
           }
