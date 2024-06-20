@@ -1135,7 +1135,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
             buff = sub->reg ? (char*)sub->recvbuff : localBuff+resources->recvMem->connFifo[buffSlot].offset;
           }
           if (ready) {
-            INFO(NCCL_ALL,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO ");
+            //INFO(NCCL_ALL,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO ");
             // Data is ready, try to send.
             NCCLCHECK(proxyState->ncclNet->isend(resources->netSendComm, buff, size, resources->tpRank, sub->mhandle, sub->requests+buffSlot));
             if (sub->requests[buffSlot] != NULL) {
