@@ -40,7 +40,7 @@ namespace {
       auto modRanks = [&]__device__(int r)->int {
         return r - (r >= nranks ? nranks : 0);
       };
-
+      OUT("channelCount : %lu loopCount : %lu remCount : %lu chunkCount : %lu\n", channelCount, loopCount, remCount, chunkCount);
       // step 0: push data to next GPU
       chunk = modRanks(ringIx + nranks - 1);
       chunkOffset = chunk * chunkCount;
