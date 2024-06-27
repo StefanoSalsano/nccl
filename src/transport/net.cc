@@ -1140,7 +1140,7 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
             // Data is ready, try to send.
 
             //proxyState->ncclNet->isend is implemented by ncclNetSocketIsend in net_socket.cc
-            INFO(NCCL_ALL,"##################### snedProxyProgress isend operation");
+            INFO(NCCL_ALL,"##################### sendProxyProgress isend operation");
             NCCLCHECK(proxyState->ncclNet->isend(resources->netSendComm, buff, size, resources->tpRank, sub->mhandle, sub->requests+buffSlot));
             if (sub->requests[buffSlot] != NULL) {
               INFO(NCCL_ALL, "sendProxyProgress ready sendProxy [%ld/%d] Isend posted, req %p, size %d, proto %d, myRank %d, channelId %d",
