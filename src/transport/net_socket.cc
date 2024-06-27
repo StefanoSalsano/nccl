@@ -213,7 +213,7 @@ void* persistentSocketThread(void *args_) {
           struct ncclNetSocketTask* r = myQueue->tasks+i+j;
           if (r != NULL && r->used == 1 && r->offset < r->size) {
             // does not pass here in our scenario
-            INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% persistentSocketThread");
+            INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX persistentSocketThread");
             r->result = ncclSocketProgress(r->op, r->sock, r->data, r->size, &r->offset);
             if (r->result != ncclSuccess) {
               WARN("NET/Socket : socket progress error");
@@ -390,7 +390,7 @@ socket_accept_check:
 socket_recv:
     int done = 0;
     //only two times in our scenario
-    INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncclNetSocketAccept");
+    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketAccept");
     NCCLCHECK(ncclSocketProgress(NCCL_SOCKET_RECV, sock, &sendSockIdx, sizeof(uint8_t), &done));
     if (done == 0) return ncclSuccess;
 
@@ -480,7 +480,7 @@ ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
   if (r->used == 1) { /* try to send/recv size */
     int data = r->size;
     int offset = 0;
-    INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncclNetSocketTest r->used == 1 ");
+    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketTest r->used == 1 ");
     NCCLCHECK(ncclSocketProgress(r->op, r->ctrlSock, &data, sizeof(int), &offset));
 
     if (offset == 0) return ncclSuccess; /* Not ready -- retry later */
@@ -533,7 +533,7 @@ ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
       }
     } else { // progress request using main thread
       if (r->offset < r->size) {
-        INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncclNetSocketTest progress request using main thread");
+        INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketTest progress request using main thread");
         NCCLCHECK(ncclSocketProgress(r->op, r->ctrlSock, r->data, r->size, &r->offset));
       }
       if (r->offset == r->size) {
