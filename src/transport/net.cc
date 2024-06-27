@@ -1312,6 +1312,8 @@ static ncclResult_t recvProxyProgress(struct ncclProxyState* proxyState, struct 
         uint64_t step = subGroup->posted;
         struct recvNetResources* resources = (struct recvNetResources*) (subGroup->connection->transportResources);
         void** requestPtr = subGroup->requests+(step%NCCL_STEPS);
+        // receive operation
+        INFO(NCCL_ALL,"##################### recvProxyProgress irecv operation");
         NCCLCHECK(proxyState->ncclNet->irecv(resources->netRecvComm, subCount, ptrs, sizes, tags, mhandles, requestPtr));
         if (*requestPtr) {
           subGroup->recvRequestsCache[step%NCCL_STEPS] = *requestPtr;

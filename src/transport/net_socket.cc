@@ -474,7 +474,7 @@ ncclResult_t ncclNetSocketGetTask(struct ncclNetSocketComm* comm, int op, void* 
 
 // who is calling ncclNetSocketTest??
 // it is called by recvProxyProgress in net.cc when receiving data from a channel/socket
-// it is called                                when sending data
+// it is called by sendProxyProgress in net.cc when sending data
 
 ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
   *done = 0;
