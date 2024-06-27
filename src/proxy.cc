@@ -844,7 +844,9 @@ static int setProxyThreadContext(struct ncclProxyState* proxyState) {
 NCCL_PARAM(ProxyDumpSignal, "PROXY_DUMP_SIGNAL", -1);
 NCCL_PARAM(ProgressAppendOpFreq, "PROGRESS_APPENDOP_FREQ", 8);
 
+
 void* ncclProxyProgress(void *proxyState_) {
+  // in our scenario it is called once
   INFO(NCCL_ALL,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO ncclProxyProgress");
   struct ncclProxyState* proxyState = (struct ncclProxyState*)proxyState_;
   if (setProxyThreadContext(proxyState)) {
@@ -921,6 +923,7 @@ ncclResult_t ncclProxyStart(struct ncclComm* comm) {
 static ncclResult_t ncclProxyProgressCreate(struct ncclProxyState* proxyState) {
   struct ncclProxyProgressState* state = &proxyState->progressState;
   if (!state->thread) {
+    INFO(NCCL_ALL,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO ncclProxyProgressCreate");
     pthread_create(&state->thread, NULL, ncclProxyProgress, proxyState);
     ncclSetThreadName(state->thread, "NCCL Progress%2d", proxyState->tpLocalnRanks);
   }
