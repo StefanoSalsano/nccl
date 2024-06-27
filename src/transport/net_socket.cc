@@ -480,7 +480,7 @@ ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
   if (r->used == 1) { /* try to send/recv size */
     int data = r->size;
     int offset = 0;
-    INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncclNetSocketTest");
+    INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncclNetSocketTest r->used == 1 ");
     NCCLCHECK(ncclSocketProgress(r->op, r->ctrlSock, &data, sizeof(int), &offset));
 
     if (offset == 0) return ncclSuccess; /* Not ready -- retry later */
@@ -533,6 +533,7 @@ ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
       }
     } else { // progress request using main thread
       if (r->offset < r->size) {
+        INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncclNetSocketTest progress request using main thread");
         NCCLCHECK(ncclSocketProgress(r->op, r->ctrlSock, r->data, r->size, &r->offset));
       }
       if (r->offset == r->size) {
