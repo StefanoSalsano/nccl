@@ -1203,7 +1203,7 @@ ncclResult_t ncclPollProxyResponse(struct ncclComm* comm, struct ncclProxyConnec
     struct ncclSocket* sock = sharedProxyState->peerSocks + proxyConn->tpLocalRank;
     ncclProxyRpcResponseHeader resp = {0};
     int offset = 0;
-    INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%% ncclPollProxyResponse");
+    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclPollProxyResponse Attempt to read in a new response");
     if (ncclSuccess != ncclSocketProgress(NCCL_SOCKET_RECV, sock, &resp, sizeof(resp), &offset)) {
       WARN("Socket recv failed while polling for opId=%p", opId);
       return ncclInternalError;
@@ -1213,8 +1213,11 @@ ncclResult_t ncclPollProxyResponse(struct ncclComm* comm, struct ncclProxyConnec
       return ncclInProgress;
     // If we've returned a partial response, block to receive the rest of it
     } else if (offset < sizeof(resp)) {
-      while (offset < sizeof(resp))
+      while (offset < sizeof(resp)) {
+        INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclPollProxyResponse returned a partial response");
         NCCLCHECK(ncclSocketProgress(NCCL_SOCKET_RECV, sock, &resp, sizeof(resp), &offset));
+      }
+        
     }
 
     INFO(NCCL_PROXY, "ncclPollProxyResponse Received new opId=%p", resp.opId);
