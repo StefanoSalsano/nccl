@@ -563,6 +563,7 @@ static ncclResult_t socketProgressState(struct ncclSocket* sock) {
     NCCLCHECK(socketTryAccept(sock));
   }
   if (sock->state == ncclSocketStateAccepted) {
+    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXX socketProgressState ncclSocketStateAccepted");
     NCCLCHECK(socketFinalizeAccept(sock));
   }
   if (sock->state == ncclSocketStateConnecting) {
