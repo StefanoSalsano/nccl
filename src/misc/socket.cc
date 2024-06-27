@@ -746,7 +746,7 @@ fail:
 }
 
 ncclResult_t ncclSocketProgress(int op, struct ncclSocket* sock, void* ptr, int size, int* offset) {
-  //INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncclSocketProgress");
+  INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncclSocketProgress");
   if (sock == NULL) {
     WARN("ncclSocketProgress: pass NULL socket");
     return ncclInvalidArgument;
