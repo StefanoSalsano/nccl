@@ -347,7 +347,8 @@ socket_connect_check:
 
 socket_send:
     int done = 0;
-    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketAccept socket_send");
+    //only two times in our scenario
+    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketConnect socket_send");
     NCCLCHECK(ncclSocketProgress(NCCL_SOCKET_SEND, sock, &i, sizeof(uint8_t), &done));
     if (done == 0) return ncclSuccess;
   }

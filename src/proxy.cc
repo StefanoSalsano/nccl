@@ -1183,9 +1183,9 @@ error:
   return ret;
 }
 
+// called multiple times (~10000) during the setup phase
 ncclResult_t ncclPollProxyResponse(struct ncclComm* comm, struct ncclProxyConnector* proxyConn, void* respBuff, void* opId) {
   
-  // called multiple times during the setup phase
   //INFO(NCCL_ALL,"XXXXXXXXXXXX ncclPollProxyResponse");
   struct ncclProxyState* sharedProxyState = comm->proxyState;
   // Receive the connection pointer from the Proxy
@@ -1203,7 +1203,7 @@ ncclResult_t ncclPollProxyResponse(struct ncclComm* comm, struct ncclProxyConnec
     struct ncclSocket* sock = sharedProxyState->peerSocks + proxyConn->tpLocalRank;
     ncclProxyRpcResponseHeader resp = {0};
     int offset = 0;
-    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclPollProxyResponse Attempt to read in a new response");
+    //INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclPollProxyResponse Attempt to read in a new response");
     if (ncclSuccess != ncclSocketProgress(NCCL_SOCKET_RECV, sock, &resp, sizeof(resp), &offset)) {
       WARN("Socket recv failed while polling for opId=%p", opId);
       return ncclInternalError;
@@ -1214,7 +1214,7 @@ ncclResult_t ncclPollProxyResponse(struct ncclComm* comm, struct ncclProxyConnec
     // If we've returned a partial response, block to receive the rest of it
     } else if (offset < sizeof(resp)) {
       while (offset < sizeof(resp)) {
-        INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclPollProxyResponse returned a partial response");
+        //INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclPollProxyResponse returned a partial response");
         NCCLCHECK(ncclSocketProgress(NCCL_SOCKET_RECV, sock, &resp, sizeof(resp), &offset));
       }
         
