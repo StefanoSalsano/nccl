@@ -426,7 +426,7 @@ static ncclResult_t socketFinalizeAccept(struct ncclSocket* sock) {
   const int one = 1;
   SYSCHECK(setsockopt(sock->fd, IPPROTO_TCP, TCP_NODELAY, (char*)&one, sizeof(int)), "setsockopt");
 
-  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXX socketFinalizeAccept");
+  //INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXX socketFinalizeAccept");
   NCCLCHECK(ncclSocketProgress(NCCL_SOCKET_RECV, sock, &magic, sizeof(magic), &received));
   if (received == 0) return ncclSuccess;
   NCCLCHECK(socketWait(NCCL_SOCKET_RECV, sock, &magic, sizeof(magic), &received));
@@ -563,7 +563,7 @@ static ncclResult_t socketProgressState(struct ncclSocket* sock) {
     NCCLCHECK(socketTryAccept(sock));
   }
   if (sock->state == ncclSocketStateAccepted) {
-    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXX socketProgressState ncclSocketStateAccepted");
+    //INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXX socketProgressState ncclSocketStateAccepted");
     NCCLCHECK(socketFinalizeAccept(sock));
   }
   if (sock->state == ncclSocketStateConnecting) {
@@ -748,7 +748,7 @@ fail:
 }
 
 ncclResult_t ncclSocketProgress(int op, struct ncclSocket* sock, void* ptr, int size, int* offset) {
-  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXX ncclSocketProgress");
+  //INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXX ncclSocketProgress");
   if (sock == NULL) {
     WARN("ncclSocketProgress: pass NULL socket");
     return ncclInvalidArgument;
