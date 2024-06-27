@@ -1336,7 +1336,8 @@ static ncclResult_t recvProxyProgress(struct ncclProxyState* proxyState, struct 
         int sizes[NCCL_PROXY_MAX_SUBS];
         void* mhandles[NCCL_PROXY_MAX_SUBS];
         for (int i=0; i<NCCL_PROXY_MAX_SUBS; i++) sizes[i] = 0;
-        INFO(NCCL_ALL,"##################### recvProxyProgress proxyState->ncclNet->test");
+        INFO(NCCL_ALL,"##################### recvProxyProgress proxyState->ncclNet->test - operation %d",
+                  subGroup->requests[step%NCCL_STEPS]->op);
         NCCLCHECK(proxyState->ncclNet->test(subGroup->requests[step%NCCL_STEPS], &done, sizes));
         if (done) {
           int needFlush = 0;

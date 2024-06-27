@@ -473,6 +473,8 @@ ncclResult_t ncclNetSocketGetTask(struct ncclNetSocketComm* comm, int op, void* 
 }
 
 // who is calling ncclNetSocketTest??
+// it is called by recvProxyProgress in net.cc when receiving data from a channel/socket
+// it is called                                when sending data
 
 ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
   *done = 0;
@@ -484,7 +486,7 @@ ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
   if (r->used == 1) { /* try to send/recv size */
     int data = r->size;
     int offset = 0;
-    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketTest r->used == 1 ");
+    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketTest r->used == 1 operation: %d", r->op);
     NCCLCHECK(ncclSocketProgress(r->op, r->ctrlSock, &data, sizeof(int), &offset));
 
     if (offset == 0) return ncclSuccess; /* Not ready -- retry later */
