@@ -845,6 +845,7 @@ NCCL_PARAM(ProxyDumpSignal, "PROXY_DUMP_SIGNAL", -1);
 NCCL_PARAM(ProgressAppendOpFreq, "PROGRESS_APPENDOP_FREQ", 8);
 
 void* ncclProxyProgress(void *proxyState_) {
+  INFO(NCCL_ALL,"-------------------> ncclProxyProgress");
   struct ncclProxyState* proxyState = (struct ncclProxyState*)proxyState_;
   if (setProxyThreadContext(proxyState)) {
     INFO(NCCL_INIT, "[Proxy Progress] Created CUDA context on device %d", proxyState->cudaDev);
@@ -1024,6 +1025,7 @@ struct ncclProxyInitResp {
   char devShmPath[6]; // "XXXXXX" - May or may not be set
 };
 
+// this function is used in our scenario
 ncclResult_t ncclProxyConnect(struct ncclComm* comm, int transport, int send, int tpProxyRank, struct ncclProxyConnector* proxyConn) {
   struct ncclSocket* sock;
   int ready, proxyRank = -1;
@@ -1078,7 +1080,7 @@ ncclResult_t ncclProxyConnect(struct ncclComm* comm, int transport, int send, in
     strncpy(poolPath+sizeof("/dev/shm/nccl-")-1, resp.devShmPath, sizeof("XXXXXX")-1);
     struct ncclProxyOps* proxyOps = sharedProxyState->proxyOps + proxyConn->tpLocalRank;
 
-    //we pass here
+    //we pass here (5 times)
     INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ncclProxyConnect");
     if (proxyOps->pool == NULL) {
       NCCLCHECK(ncclShmOpen(poolPath, sizeof(struct ncclProxyOpsPool), (void**)(&proxyOps->pool), NULL, 0, &proxyOps->handle));
