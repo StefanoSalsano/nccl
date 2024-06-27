@@ -212,6 +212,7 @@ void* persistentSocketThread(void *args_) {
         for (int j=0; j<nSocksPerThread; j++) {
           struct ncclNetSocketTask* r = myQueue->tasks+i+j;
           if (r != NULL && r->used == 1 && r->offset < r->size) {
+            // does not pass here in our scenario
             INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% persistentSocketThread");
             r->result = ncclSocketProgress(r->op, r->sock, r->data, r->size, &r->offset);
             if (r->result != ncclSuccess) {
@@ -388,6 +389,7 @@ socket_accept_check:
     stage->state = ncclNetSocketCommStateRecv;
 socket_recv:
     int done = 0;
+    INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncclNetSocketAccept");
     NCCLCHECK(ncclSocketProgress(NCCL_SOCKET_RECV, sock, &sendSockIdx, sizeof(uint8_t), &done));
     if (done == 0) return ncclSuccess;
 
