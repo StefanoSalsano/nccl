@@ -750,7 +750,7 @@ fail:
 // it is called many times...
 // only two times in ncclNetSocketAccept
 // only two times in ncclNetSocketConnect
-
+// hundreds of times in ncclNetSocketTest
 ncclResult_t ncclSocketProgress(int op, struct ncclSocket* sock, void* ptr, int size, int* offset) {
   //INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXX ncclSocketProgress");
   if (sock == NULL) {

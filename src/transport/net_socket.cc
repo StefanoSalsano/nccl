@@ -472,6 +472,8 @@ ncclResult_t ncclNetSocketGetTask(struct ncclNetSocketComm* comm, int op, void* 
   return ncclInternalError;
 }
 
+// who is calling ncclNetSocketTest??
+
 ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
   *done = 0;
   struct ncclNetSocketRequest *r = (struct ncclNetSocketRequest*)request;
