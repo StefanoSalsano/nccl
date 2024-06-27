@@ -14,7 +14,7 @@
 #include "param.h"
 
 static ncclResult_t socketProgressOpt(int op, struct ncclSocket* sock, void* ptr, int size, int* offset, int block, int* closed) {
-  INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% socketProgressOpt");
+  //INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% socketProgressOpt");
   int bytes = 0;
   *closed = 0;
   char* data = (char*)ptr;
@@ -746,6 +746,7 @@ fail:
 }
 
 ncclResult_t ncclSocketProgress(int op, struct ncclSocket* sock, void* ptr, int size, int* offset) {
+  //INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncclSocketProgress");
   if (sock == NULL) {
     WARN("ncclSocketProgress: pass NULL socket");
     return ncclInvalidArgument;
