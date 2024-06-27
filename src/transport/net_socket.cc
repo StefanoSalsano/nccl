@@ -212,6 +212,7 @@ void* persistentSocketThread(void *args_) {
         for (int j=0; j<nSocksPerThread; j++) {
           struct ncclNetSocketTask* r = myQueue->tasks+i+j;
           if (r != NULL && r->used == 1 && r->offset < r->size) {
+            INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%%%%%%%%% persistentSocketThread");
             r->result = ncclSocketProgress(r->op, r->sock, r->data, r->size, &r->offset);
             if (r->result != ncclSuccess) {
               WARN("NET/Socket : socket progress error");
