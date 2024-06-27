@@ -486,7 +486,7 @@ ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
   if (r->used == 1) { /* try to send/recv size */
     int data = r->size;
     int offset = 0;
-    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketTest r->used == 1 operation: %s", (r->op == NCCL_SOCKET_SEND) ? "SEND" : "RECEIVE");
+    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketTest r->used == 1 operation: %s", (r->op == NCCL_SOCKET_SEND) ? "SEND" : "RECV");
     NCCLCHECK(ncclSocketProgress(r->op, r->ctrlSock, &data, sizeof(int), &offset));
 
     if (offset == 0) return ncclSuccess; /* Not ready -- retry later */
