@@ -347,6 +347,7 @@ socket_connect_check:
 
 socket_send:
     int done = 0;
+    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketAccept socket_send");
     NCCLCHECK(ncclSocketProgress(NCCL_SOCKET_SEND, sock, &i, sizeof(uint8_t), &done));
     if (done == 0) return ncclSuccess;
   }
@@ -390,7 +391,7 @@ socket_accept_check:
 socket_recv:
     int done = 0;
     //only two times in our scenario
-    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketAccept");
+    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketAccept socket_recv");
     NCCLCHECK(ncclSocketProgress(NCCL_SOCKET_RECV, sock, &sendSockIdx, sizeof(uint8_t), &done));
     if (done == 0) return ncclSuccess;
 
