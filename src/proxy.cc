@@ -1203,6 +1203,7 @@ ncclResult_t ncclPollProxyResponse(struct ncclComm* comm, struct ncclProxyConnec
     struct ncclSocket* sock = sharedProxyState->peerSocks + proxyConn->tpLocalRank;
     ncclProxyRpcResponseHeader resp = {0};
     int offset = 0;
+    INFO(NCCL_ALL,"%%%%%%%%%%%%%%%%%%%%% ncclPollProxyResponse");
     if (ncclSuccess != ncclSocketProgress(NCCL_SOCKET_RECV, sock, &resp, sizeof(resp), &offset)) {
       WARN("Socket recv failed while polling for opId=%p", opId);
       return ncclInternalError;
