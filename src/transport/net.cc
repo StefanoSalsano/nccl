@@ -1215,7 +1215,7 @@ int mycounter_recv =0;
 // in this function we are receiving data from a channel/socket and we are writing the to the GPU
 static ncclResult_t recvProxyProgress(struct ncclProxyState* proxyState, struct ncclProxyArgs* args) {
 
-  //INFO(NCCL_ALL,"########################################## recvProxyProgress");
+  INFO(NCCL_ALL,"########################################## recvProxyProgress");
   if ((mycounter_recv++ % 100) == 0) {
     INFO(NCCL_ALL,"recvProxyProgress counter : %d",mycounter_recv);  
   }
