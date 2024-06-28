@@ -474,7 +474,8 @@ ncclResult_t ncclNetSocketGetTask(struct ncclNetSocketComm* comm, int op, void* 
 
 // who is calling ncclNetSocketTest??
 // it is called by recvProxyProgress in net.cc when receiving data from a channel/socket
-// it is called by sendProxyProgress in net.cc when sending data
+// it is called by sendProxyProgress in net.cc when sending data to a channel/socket
+// ncclNetSocketTest calls ncclSocketProgress
 
 ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
   *done = 0;
@@ -486,7 +487,7 @@ ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
   if (r->used == 1) { /* try to send/recv size */
     int data = r->size;
     int offset = 0;
-    INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketTest r->used == 1 operation: %s", (r->op == NCCL_SOCKET_SEND) ? "SEND" : "RECV");
+    //INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketTest r->used == 1 operation: %s", (r->op == NCCL_SOCKET_SEND) ? "SEND" : "RECV");
     NCCLCHECK(ncclSocketProgress(r->op, r->ctrlSock, &data, sizeof(int), &offset));
 
     if (offset == 0) return ncclSuccess; /* Not ready -- retry later */
@@ -539,7 +540,7 @@ ncclResult_t ncclNetSocketTest(void* request, int* done, int* size) {
       }
     } else { // progress request using main thread
       if (r->offset < r->size) {
-        INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketTest progress request using main thread");
+        //INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXX ncclNetSocketTest progress request using main thread");
         NCCLCHECK(ncclSocketProgress(r->op, r->ctrlSock, r->data, r->size, &r->offset));
       }
       if (r->offset == r->size) {
