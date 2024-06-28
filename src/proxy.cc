@@ -694,7 +694,7 @@ static ncclResult_t removeOp(struct ncclProxyProgressState* state, struct ncclPr
 static ncclResult_t progressOps(struct ncclProxyState* proxyState, struct ncclProxyProgressState* state, struct ncclProxyArgs* opStart, int* idle) {
   struct ncclProxyArgs* prevOp = NULL;
   struct ncclProxyArgs* op = opStart;
-  int while_counter = 0
+  int while_counter = 0;
   while (op) {
     if (op->state == ncclProxyOpNone) return ncclInternalError;
     TIME_START(0); TIME_START(1);
