@@ -689,6 +689,7 @@ static ncclResult_t removeOp(struct ncclProxyProgressState* state, struct ncclPr
   return ncclSuccess;
 }
 
+
 static ncclResult_t progressOps(struct ncclProxyState* proxyState, struct ncclProxyProgressState* state, struct ncclProxyArgs* opStart, int* idle) {
   struct ncclProxyArgs* prevOp = NULL;
   struct ncclProxyArgs* op = opStart;
@@ -876,6 +877,7 @@ void* ncclProxyProgress(void *proxyState_) {
   struct ncclProxyArgs profArgs; // Only used for profiling purposes
   while ((state->stop == 0 || (state->stop == 1 && state->active)) && *proxyState->abortFlag == 0) {
     int idle = 1;
+    INFO(NCCL_ALL,"QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ ncclProxyProgress while");
     ncclResult_t ret = progressOps(proxyState, state, state->active, &idle);
     if (ret != ncclSuccess) {
       __atomic_store_n(&proxyState->asyncResult, ret, __ATOMIC_RELEASE);
