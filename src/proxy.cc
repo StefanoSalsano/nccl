@@ -690,6 +690,7 @@ static ncclResult_t removeOp(struct ncclProxyProgressState* state, struct ncclPr
 }
 
 // this is called by ncclProxyProgress in this file in its while loop
+// it executes recvProxyProgress or sendProxyProgress one or more times
 
 static ncclResult_t progressOps(struct ncclProxyState* proxyState, struct ncclProxyProgressState* state, struct ncclProxyArgs* opStart, int* idle) {
   struct ncclProxyArgs* prevOp = NULL;
@@ -905,6 +906,7 @@ void* ncclProxyProgress(void *proxyState_) {
     }
     lastIdle = idle;
   }
+  INFO(NCCL_ALL,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO ncclProxyProgress return");
   return NULL;
 }
 
