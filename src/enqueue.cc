@@ -1698,7 +1698,7 @@ static ncclResult_t getChannnelThreadInfo(struct ncclInfo* collInfo) {
       if (collInfo->algorithm == NCCL_ALGO_TREE) nt += 4*WARP_SIZE;
     }
     nt = nt / WARP_SIZE < 3 ? 3 * WARP_SIZE : nt;
-    nt = WARP_SIZE; //STEFANO COMMENT THIS LINE!!! (it is a manual tweak of number of threads)
+    //nt = WARP_SIZE; //STEFANO COMMENT THIS LINE!!! (it is a manual tweak of number of threads)
     collInfo->nThreads = nt;
   }
   INFO(NCCL_ALL,"getChannnelThreadInfo collInfo->nThreads final %d", collInfo->nThreads);
