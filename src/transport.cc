@@ -117,9 +117,9 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
     TIME_START(0);
     for (int c=0; c<MAXCHANNELS; c++) {
       if (recvMask & (1UL<<c)) {
-        INFO(NCCL_ALL,"ncclTransportP2pSetup BEFORE selectTransport (recv)");
+        INFO(NCCL_ALL,"ncclTransportP2pSetup BEFORE selectTransport (recv) channel : %d",c);
         NCCLCHECKGOTO(selectTransport<0>(comm, graph, recvData[p]+recvChannels++, c, recvPeer, connIndex, &type), ret, fail);
-        INFO(NCCL_ALL,"ncclTransportP2pSetup AFTER selectTransport (recv)");
+        INFO(NCCL_ALL,"ncclTransportP2pSetup AFTER selectTransport (recv) channel : %d",c);
         if (type > highestType) highestType = type;
       }
     }
@@ -128,9 +128,9 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
     sendData[p] = recvData[p]+recvChannels;
     for (int c=0; c<MAXCHANNELS; c++) {
       if (sendMask & (1UL<<c)) {
-        INFO(NCCL_ALL,"ncclTransportP2pSetup BEFORE selectTransport (send)");
+        INFO(NCCL_ALL,"ncclTransportP2pSetup BEFORE selectTransport (send) channel : %d",c);
         NCCLCHECKGOTO(selectTransport<1>(comm, graph, sendData[p]+sendChannels++, c, sendPeer, connIndex, &type), ret, fail);
-        INFO(NCCL_ALL,"ncclTransportP2pSetup AFTER selectTransport (send)");
+        INFO(NCCL_ALL,"ncclTransportP2pSetup AFTER selectTransport (send) channel : %d",c);
         if (type > highestType) highestType = type;
       }
     }
