@@ -40,9 +40,11 @@ static ncclResult_t selectTransport(struct ncclComm* comm, struct ncclTopoGraph*
 }
 
 // connect with previous and next node in RING or TREE
+// only sets the intent to connect, then the connections are created in ncclTransportP2pSetup
 ncclResult_t ncclTransportP2pConnect(struct ncclComm* comm, int channelId, int nrecv, int* peerRecv, int nsend, int* peerSend, int connIndex) {
   TRACE(NCCL_INIT, "nsend %d nrecv %d", nsend, nrecv);
-  INFO(NCCL_ALL,"ncclTransportP2pConnect : nsend %d nrecv %d", nsend, nrecv);
+  INFO(NCCL_ALL,"ncclTransportP2pConnect : nsend %d nrecv %d channelId %d peerRecv[0] %d peerSend[0] %d", 
+                                            nsend, nrecv, channelId, peerRecv[0], peerSend[0]);
   struct ncclChannel* channel = &comm->channels[channelId];
   uint64_t mask = 1UL << channel->id;
   for (int i=0; i<nrecv; i++) {

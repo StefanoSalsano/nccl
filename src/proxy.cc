@@ -851,7 +851,7 @@ NCCL_PARAM(ProgressAppendOpFreq, "PROGRESS_APPENDOP_FREQ", 8);
 
 
 void* ncclProxyProgress(void *proxyState_) {
-  // in our scenario it is called once
+  // in our scenario it is called once (then there is a while loop!!)
   INFO(NCCL_ALL,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO ncclProxyProgress");
   struct ncclProxyState* proxyState = (struct ncclProxyState*)proxyState_;
   if (setProxyThreadContext(proxyState)) {
@@ -1497,7 +1497,7 @@ static bool proxyMatchOpType(int type) {
   }
 }
 
-// proxy service
+// proxy service, it is created during the initialization phase by ncclProxyCreate
 void* ncclProxyService(void* _args) {
   struct ncclProxyState* proxyState =  (struct ncclProxyState*) _args;
   INFO(NCCL_ALL, "ncclProxyService first line");

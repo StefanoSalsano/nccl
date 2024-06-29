@@ -8,6 +8,7 @@
 #include "param.h"
 #include "gdrwrap.h"
 
+// not related to sockets... it seems it is related to CUDA streams
 ncclResult_t initChannel(struct ncclComm* comm, int channelId) {
   struct ncclChannel* channel = &comm->channels[channelId];
   if (channel->id != -1) return ncclSuccess;

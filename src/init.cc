@@ -525,7 +525,7 @@ static ncclResult_t fillInfo(struct ncclComm* comm, struct ncclPeerInfo* info, u
 
 static ncclResult_t setupChannel(struct ncclComm* comm, int channelId, int rank, int nranks, int* ringRanks) {
   TRACE(NCCL_INIT, "rank %d nranks %d", rank, nranks);
-  INFO(NCCL_ALL, "setupChannel : rank %d nranks %d", rank, nranks);
+  INFO(NCCL_ALL, "setupChannel : rank %d nranks %d channelId %d", rank, nranks, channelId);
   NCCLCHECK(initChannel(comm, channelId));
 
   struct ncclRing* ring = &comm->channels[channelId].ring;
