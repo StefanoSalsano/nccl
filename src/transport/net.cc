@@ -170,7 +170,11 @@ static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct 
 
 /* Determine if we will use this transport for this peer and return connect
  * information for this peer */
-static ncclResult_t sendSetup(struct ncclComm* comm, struct ncclTopoGraph* graph, struct ncclPeerInfo* myInfo, struct ncclPeerInfo* peerInfo, struct ncclConnect* connectInfo, struct ncclConnector* send, int channelId, int connIndex) {
+static ncclResult_t sendSetup(struct ncclComm* comm, struct ncclTopoGraph* graph, struct ncclPeerInfo* myInfo,
+                              struct ncclPeerInfo* peerInfo, struct ncclConnect* connectInfo, 
+                              struct ncclConnector* send, int channelId, int connIndex) {
+
+  INFO(NCCL_ALL, "sendSetup channelId %d connIndex %d", channelId, connIndex);
   struct setupReq req = { 0 };
   int tpProxyRank;
 
@@ -208,7 +212,11 @@ NCCL_PARAM(GdrCopySyncEnable, "GDRCOPY_SYNC_ENABLE", 1);
 NCCL_PARAM(GdrCopyFlushEnable, "GDRCOPY_FLUSH_ENABLE", 0);
 
 /* Setup recv connector */
-static ncclResult_t recvSetup(struct ncclComm* comm, struct ncclTopoGraph* graph, struct ncclPeerInfo* myInfo, struct ncclPeerInfo* peerInfo, struct ncclConnect* connectInfo, struct ncclConnector* recv, int channelId, int connIndex) {
+static ncclResult_t recvSetup(struct ncclComm* comm, struct ncclTopoGraph* graph, struct ncclPeerInfo* myInfo,
+                              struct ncclPeerInfo* peerInfo, struct ncclConnect* connectInfo,
+                              struct ncclConnector* recv, int channelId, int connIndex) {
+  
+  INFO(NCCL_ALL, "sendSetup channelId %d connIndex %d", channelId, connIndex);
   struct setupReq req = { 0 };
 
   recv->conn.shared = req.shared = graph ? 0 : ncclParamNetSharedBuffers() != -2 ? ncclParamNetSharedBuffers() : 1;

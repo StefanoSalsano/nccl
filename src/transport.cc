@@ -30,6 +30,7 @@ static ncclResult_t selectTransport(struct ncclComm* comm, struct ncclTopoGraph*
     NCCLCHECK(transport->canConnect(&ret, comm->topo, graph, myInfo, peerInfo));
     if (ret) {
       connector->transportComm = transportComm;
+      // in our case sendSetup in transport/net.cc (or recvSetup)
       NCCLCHECK(transportComm->setup(comm, graph, myInfo, peerInfo, connect, connector, channelId, connIndex));
       if (transportType) *transportType = t;
       return ncclSuccess;

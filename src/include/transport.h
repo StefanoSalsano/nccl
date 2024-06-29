@@ -86,6 +86,20 @@ struct ncclCollNetSharedRes {
   size_t buffSize;
 };
 
+
+//in proxy.cc proxyConnInit 
+//(*connection)->tcomm = (*connection)->send ? 
+//                         &ncclTransports[(*connection)->transport]->send 
+//                       : &ncclTransports[(*connection)->transport]->recv;
+
+// in transport.cc
+//struct ncclTransport* ncclTransports[NTRANSPORTS] = {
+//  &p2pTransport,
+//  &shmTransport,
+//  &netTransport,
+//  &collNetTransport
+//};
+
 struct ncclTransportComm {
   ncclResult_t (*setup)(struct ncclComm* comm, struct ncclTopoGraph* graph, struct ncclPeerInfo*, struct ncclPeerInfo*, struct ncclConnect*, struct ncclConnector*, int channelId, int connIndex);
   ncclResult_t (*connect)(struct ncclComm* comm, struct ncclConnect*, int nranks, int rank, struct ncclConnector*);
