@@ -931,6 +931,7 @@ static ncclResult_t ncclProxyProgressCreate(struct ncclProxyState* proxyState) {
   struct ncclProxyProgressState* state = &proxyState->progressState;
   if (!state->thread) {
     INFO(NCCL_ALL,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO ncclProxyProgressCreate");
+    // creates the thread for proxy communication (used in our scenario)
     pthread_create(&state->thread, NULL, ncclProxyProgress, proxyState);
     ncclSetThreadName(state->thread, "NCCL Progress%2d", proxyState->tpLocalnRanks);
   }

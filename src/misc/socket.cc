@@ -20,7 +20,9 @@ static ncclResult_t socketProgressOpt(int op, struct ncclSocket* sock, void* ptr
   char* data = (char*)ptr;
   char line[SOCKET_NAME_MAXLEN+1];
   do {
-    if (op == NCCL_SOCKET_RECV) bytes = recv(sock->fd, data+(*offset), size-(*offset), block ? 0 : MSG_DONTWAIT);
+    if (op == NCCL_SOCKET_RECV) {
+      bytes = recv(sock->fd, data+(*offset), size-(*offset), block ? 0 : MSG_DONTWAIT);
+    }
     if (op == NCCL_SOCKET_SEND) bytes = send(sock->fd, data+(*offset), size-(*offset), block ? MSG_NOSIGNAL : MSG_DONTWAIT | MSG_NOSIGNAL);
     if (op == NCCL_SOCKET_RECV && bytes == 0) {
       *closed = 1;
