@@ -1163,7 +1163,7 @@ error:
 const char* ncclProxyMsgTypeStr[] = { "Unknown", "Init", "SharedInit", "Setup", "Connect", "Start", "Close", "Abort", "Stop", "GetFd" };
 ncclResult_t ncclProxyCallAsync(struct ncclComm* comm, struct ncclProxyConnector* proxyConn, int type, void* reqBuff, int reqSize, int respSize, void* opId) {
   
-  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ncclProxyCallAsync");
+  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXX ncclProxyCallAsync");
   
   struct ncclSocket* sock;
   ncclResult_t ret = ncclSuccess;
@@ -1259,7 +1259,7 @@ ncclResult_t ncclPollProxyResponse(struct ncclComm* comm, struct ncclProxyConnec
 
 ncclResult_t ncclProxyCallBlocking(struct ncclComm* comm, struct ncclProxyConnector* proxyConn, int type, void* reqBuff, int reqSize, void* respBuff, int respSize) {
   
-  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ncclProxyCallBlocking");
+  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXX ncclProxyCallBlocking");
   // Alloc some memory to act as a handle
   ncclResult_t res = ncclSuccess;
   void* opId = malloc(1);
@@ -1279,7 +1279,7 @@ fail:
 
 static ncclResult_t proxyProgressInit(struct ncclProxyState* proxyState) {
 
-  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX proxyProgressInit");
+  INFO(NCCL_ALL,"XXXXXXXXXXXXXXXXXXXXXXXX proxyProgressInit");
   
   struct ncclProxyProgressState* state = &proxyState->progressState;
   if (state->opsPool == NULL) {

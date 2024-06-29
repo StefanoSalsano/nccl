@@ -1279,6 +1279,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
     
     if (comm->nRanks == 1) continue;
     INFO(NCCL_ALL, "initTransportsRank -> ncclTransportP2pConnect");
+    // only sets the intent to connect, then the connections are created in ncclTransportP2pSetup
     NCCLCHECKGOTO(ncclTransportP2pConnect(comm, c, 1, &channel->ring.prev, 1, &channel->ring.next, 0), ret, fail);
   }
 
