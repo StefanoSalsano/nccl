@@ -451,6 +451,7 @@ static ncclResult_t groupLaunch(struct ncclAsyncJob *job_, ncclSimInfo_t* simInf
   }
 
   if ((!simInfo) && (groupCommHeadMain != nullptr)) {
+    INFO(NCCL_ALL,"groupLaunch -> doLaunches");
     NCCLCHECKGOTO(doLaunches(groupCommHeadMain), ret, fail);
   }
 
@@ -544,6 +545,7 @@ ncclResult_t ncclGroupEndInternal(ncclSimInfo_t* simInfo) {
       ret = ncclInProgress;
     } else {
       /* blocking group */
+      INFO(NCCL_ALL,"ncclGroupEndInternal -> groupLaunch ");
       NCCLCHECKGOTO(groupLaunch(&ncclGroupJobMainPtr->base, internalSimInfoPtr), ret, fail);
       if (simInfo) memcpy((void*)simInfo, (void*)internalSimInfoPtr, realSize);
       groupResetJobState(ncclGroupJobMainPtr);
