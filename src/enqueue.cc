@@ -375,7 +375,7 @@ static ncclResult_t registerIntraNodeBuffers(
       info->nMaxChannels = std::max(comm->config.minCTAs, std::min(comm->config.maxCTAs, 1));
       info->regBufType = NCCL_COLLNET_REG_BUFFER;
       if (sendRegBufFlag == 1 && recvRegBufFlag == 1) {
-        INFO(NCCL_REG, "rank %d successfully registered collNet sendbuff %p (handle %p), sendbuff size %ld, recvbuff %p (handle %p), recvbuff size %ld", comm->rank, info->sendbuff, sendHandle, sendbuffSize, info->recvbuff, recvHandle, recvbuffSize);
+        INFO(NCCL_ALL, "rank %d successfully registered collNet sendbuff %p (handle %p), sendbuff size %ld, recvbuff %p (handle %p), recvbuff size %ld", comm->rank, info->sendbuff, sendHandle, sendbuffSize, info->recvbuff, recvHandle, recvbuffSize);
       }
     }
   }
@@ -704,7 +704,8 @@ static ncclResult_t scheduleCollTasksToPlan(
 
       devWork->channelLo = channelId;
       devWork->channelHi = channelId + nChannels-1;
-      devWork->cbd.countLo = countLo;
+      // CBD=Chunked Buffer Data
+      devWork->cbd.countLo = countLo;     
       devWork->cbd.countMid = countMid;
       devWork->cbd.countHi = countHi;
 
@@ -758,6 +759,7 @@ static ncclResult_t scheduleCollTasksToPlan(
         proxyOp->channelId = c;
         proxyOp->opCount = proxyOpId;
         addWorkBatchToPlan(comm, plan, c, workNode->workType, task->devFuncId, plan->workBytes);
+        // in our scenario the proxy operations are needed
         NCCLCHECK(addProxyOpIfNeeded(comm, plan, proxyOp));
       }
     }
@@ -765,6 +767,7 @@ static ncclResult_t scheduleCollTasksToPlan(
     plan->channelMask |= (2ull<<devWork->channelHi) - (1ull<<devWork->channelLo);
     plan->threadPerBlock = std::max(plan->threadPerBlock, task->nWarps*WARP_SIZE);
     if (!plan->kernelSpecialized) {
+      INFO(NCCL_ALL,"****scheduleCollTasksToPlan -> set kernelFn"); 
       plan->kernelFn = ncclDevKernelForFunc[task->devFuncId];
       plan->kernelSpecialized = ncclDevKernelForFuncIsSpecialized[task->devFuncId];
     }
@@ -1394,7 +1397,7 @@ NCCL_PARAM(MemSyncDomain, "MEM_SYNC_DOMAIN", cudaLaunchMemSyncDomainRemote);
 
 //STEFANO
 //struct ncclComm is defined in comm.h it has more than 100 fields...
-//struct ncclKernelPlan is defined in comm.h it includes the kernet function and the channels
+//struct ncclKernelPlan is defined in comm.h it includes the kernel function and the channels
 ncclResult_t ncclLaunchKernel(struct ncclComm* comm, struct ncclKernelPlan* plan) {
   struct ncclKernelPlanner* planner = &comm->planner;
   int nChannels = countOneBits(plan->channelMask);
@@ -1458,11 +1461,20 @@ ncclResult_t ncclLaunchKernel(struct ncclComm* comm, struct ncclKernelPlan* plan
     launchConfig.numAttrs = attrs;
     launchConfig.hStream = launchStream;
 
+
+    //INFO(NCCL_ALL,"cudaLaunchKernelExC");
+    //STEFANO
+    // Parameters config : Launch configuration, func : Kernel to launch
+    // args : Array of pointers to kernel parameters
+    // see https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__EXECUTION.html#group__CUDART__EXECUTION_1g5064cdf5d8e6741ace56fd8be951783c
     //CUDACHECK(cudaLaunchKernelExC(&launchConfig, fnAddr, args));
+
+    INFO(NCCL_ALL,"cudaLaunchKernelEx");
     CUCHECK(cuLaunchKernelEx(&launchConfig, fn, nullptr, extra));
     return ncclSuccess;
   }
   #endif
+  INFO(NCCL_ALL,"Standard kernel launch");
   // Standard kernel launch
   CUCHECK(cuLaunchKernel(fn, grid.x, grid.y, grid.z, block.x, block.y, block.z, smem, launchStream, nullptr, extra));
   //CUDACHECK(cudaLaunchKernel(fnAddr, grid, block, args, smem, launchStream));
@@ -1653,7 +1665,8 @@ static ncclResult_t topoGetAlgoInfo(
   if (info->algorithm != NCCL_ALGO_NVLS && info->algorithm != NCCL_ALGO_NVLS_TREE &&
     info->algorithm != NCCL_ALGO_COLLNET_DIRECT) {
     while (nBytes < nc * nt * threadThreshold) {
-      if (nt % 128 == 0) nt /= 2;
+      //if it is a multiple of 128, divide by 2
+      if (nt % 128 == 0) nt /= 2; 
       else break;
     }
   }
@@ -1663,6 +1676,8 @@ static ncclResult_t topoGetAlgoInfo(
     if (info->algorithm == NCCL_ALGO_TREE) nt += 4*WARP_SIZE;
   }
   nt = nt/WARP_SIZE < 3 ? 3*WARP_SIZE : nt;
+  //nt = WARP_SIZE; //STEFANO COMMENT THIS LINE!!! (it is a manual tweak of number of threads)
+
   if (info->algorithm == NCCL_ALGO_TREE) nt = NCCL_MAX_NTHREADS; // Tree now uses all threads always.
   info->nMaxChannels = nc;
   info->nWarps = nt/WARP_SIZE;
@@ -1949,6 +1964,8 @@ static ncclResult_t hostToDevRedOp(
 // single rank communicators, collectives are issued as `ncclMemcpyAsync`s and
 // thus don't need a task.
 static ncclResult_t taskAppend(struct ncclComm* comm, struct ncclInfo* info) {
+  INFO(NCCL_ALL,"************ taskAppend");
+
   struct ncclKernelPlanner *planner = &comm->planner;
 
   if (info->coll == ncclFuncSend || info->coll == ncclFuncRecv) {
@@ -1994,6 +2011,8 @@ static ncclResult_t taskAppend(struct ncclComm* comm, struct ncclInfo* info) {
       }
     }
   } else {
+    //INFO(NCCL_ALL,"*******else branch");
+
     // Empty collectives can be discarded.
     if (info->count == 0) return ncclSuccess;
 
@@ -2062,6 +2081,7 @@ static ncclResult_t taskAppend(struct ncclComm* comm, struct ncclInfo* info) {
 }
 
 ncclResult_t ncclEnqueueCheck(struct ncclInfo* info) {
+  INFO(NCCL_ALL,"********* ncclEnqueueCheck (enqueue.cc)");
   NCCLCHECK(ncclGroupStartInternal());
   ncclResult_t ret = ncclSuccess;
   int devOld = -1;
@@ -2076,7 +2096,7 @@ ncclResult_t ncclEnqueueCheck(struct ncclInfo* info) {
   }
   NCCLCHECKGOTO(ArgsCheck(info), ret, fail);
 
-  INFO(NCCL_COLL,"%s: opCount %lx sendbuff %p recvbuff %p count %zu datatype %d op %d root %d comm %p [nranks=%d] stream %p",
+  INFO(NCCL_ALL,"%s: opCount %lx sendbuff %p recvbuff %p count %zu datatype %d op %d root %d comm %p [nranks=%d] stream %p",
         info->opName, info->comm->opCount, info->sendbuff, info->recvbuff, info->count,
         info->datatype, info->op, info->root, info->comm, info->comm->nRanks, info->stream);
   TRACE_CALL("nccl%s(%" PRIx64 ",%" PRIx64 ",%zu,%d,%d,%d,%p,%p)", info->opName, reinterpret_cast<int64_t>(info->sendbuff), reinterpret_cast<int64_t>(info->recvbuff), info->count, info->datatype, info->op, info->root, info->comm, info->stream);
