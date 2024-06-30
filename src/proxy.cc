@@ -978,6 +978,7 @@ struct ncclProxyInitResp {
 };
 
 // this function is used in our scenario
+// in the initialization phase it is called by sendSetup and recvSetup and it calls ncclSocketInit
 ncclResult_t ncclProxyConnect(struct ncclComm* comm, int transport, int send, int tpProxyRank, struct ncclProxyConnector* proxyConn) {
   struct ncclSocket* sock;
   int ready, proxyRank = -1;
