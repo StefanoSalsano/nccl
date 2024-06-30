@@ -683,6 +683,7 @@ static int checkMNNVL(struct ncclComm* comm) {
 #define TIMER_INIT_CONNECT 6
 #define TIMERS_INIT_COUNT 7
 
+// inside this function there is the main initialization and setup phase
 static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* parent, uint64_t timers[TIMERS_INIT_COUNT]) {
   // We use 2 AllGathers
   // 1. { peerInfo, comm, compCap}
@@ -1238,6 +1239,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
       }
 
       NCCLCHECKGOTO(ncclTransportP2pSetup(comm, NULL, 1), ret, fail);
+      INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE------------------------>");
     }
   }
 
