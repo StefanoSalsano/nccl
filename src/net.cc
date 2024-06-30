@@ -564,11 +564,6 @@ ncclResult_t ncclNetCheckDeviceVersion(struct ncclComm* comm, ncclNet_t* net, in
       return ncclInternalError;
   }
 
-<<<<<<< HEAD
-  INFO(NCCL_INIT, "Using non-device net plugin version : %d",
-    props.netDeviceVersion);
-=======
->>>>>>> 178b6b759074597777ce13438efb0e0ba625e429
   return ncclSuccess;
 }
 

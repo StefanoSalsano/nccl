@@ -230,15 +230,6 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
     }
   }
 
-<<<<<<< HEAD
-  if (1 || timeReported) {
-    struct timeval now;
-    gettimeofday(&now, NULL);
-    float elapsed = (now.tv_sec - timeStart.tv_sec)*1.0 + (now.tv_usec-timeStart.tv_usec)*1e-6;
-    printf("\rP2p connect done in %d:%02d.%06d          \n",
-        ((int)elapsed)/60, ((int)elapsed)%60, (int)((elapsed-((int)elapsed))*(float)1000000));
-    fflush(stdout);
-=======
   {
     struct timeval now;
     gettimeofday(&now, NULL);
@@ -249,7 +240,6 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
              ((int)elapsed)/60, ((int)elapsed)%60);
       fflush(stdout);
     }
->>>>>>> 178b6b759074597777ce13438efb0e0ba625e429
   }
 
   /* We need to sync ranks here since some ranks might run too fast after connection setup

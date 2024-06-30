@@ -374,14 +374,6 @@ static ncclResult_t asyncJobLaunch(struct ncclIntruQueue<struct ncclAsyncJob, &n
     if (ret != ncclSuccess) goto fail;
   }
 
-<<<<<<< HEAD
-  if (groupCommHeadMain != nullptr) {
-    INFO(NCCL_ALL,"groupLaunch -> doLaunches");
-    NCCLCHECKGOTO(doLaunches(groupCommHeadMain), ret, fail);
-  }
-
-=======
->>>>>>> 178b6b759074597777ce13438efb0e0ba625e429
   while (!ncclIntruQueueEmpty(asyncJobsMain)) {
     struct ncclAsyncJob* job = ncclIntruQueueDequeue(asyncJobsMain);
     if (!job->destroyFlag && job->comm && !job->comm->config.blocking)
@@ -552,13 +544,8 @@ ncclResult_t ncclGroupEndInternal(ncclSimInfo_t* simInfo) {
       ret = ncclInProgress;
     } else {
       /* blocking group */
-<<<<<<< HEAD
-      INFO(NCCL_ALL,"ncclGroupEndInternal -> groupLaunch ");
-      NCCLCHECKGOTO(groupLaunch(&ncclGroupJobMainPtr->base), ret, fail);
-=======
       NCCLCHECKGOTO(groupLaunch(&ncclGroupJobMainPtr->base, internalSimInfoPtr), ret, fail);
       if (simInfo) memcpy((void*)simInfo, (void*)internalSimInfoPtr, realSize);
->>>>>>> 178b6b759074597777ce13438efb0e0ba625e429
       groupResetJobState(ncclGroupJobMainPtr);
     }
   }
