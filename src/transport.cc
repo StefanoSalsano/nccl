@@ -31,7 +31,7 @@ static ncclResult_t selectTransport(struct ncclComm* comm, struct ncclTopoGraph*
     NCCLCHECK(transport->canConnect(&ret, comm->topo, graph, myInfo, peerInfo));
     if (ret) {
       connector->transportComm = transportComm;
-      // in our case sendSetup in transport/net.cc (or recvSetup)
+      // in our case sendSetup or recvSetup in transport/net.cc
       NCCLCHECK(transportComm->setup(comm, graph, myInfo, peerInfo, connect, connector, channelId, connIndex));
       if (transportType) *transportType = t;
       return ncclSuccess;
@@ -42,7 +42,7 @@ static ncclResult_t selectTransport(struct ncclComm* comm, struct ncclTopoGraph*
 }
 
 // connect with previous and next node in RING or TREE
-// only sets the intent to connect, then the connections are created in ncclTransportP2pSetup
+// only sets the intent to connect, then the connections are created in ncclTransportP2pSetup(????)
 ncclResult_t ncclTransportP2pConnect(struct ncclComm* comm, int channelId, int nrecv, int* peerRecv, int nsend, int* peerSend, int connIndex) {
   TRACE(NCCL_INIT, "nsend %d nrecv %d", nsend, nrecv);
   INFO(NCCL_ALL,"ncclTransportP2pConnect : nsend %d nrecv %d channelId %d peerRecv[0] %d peerSend[0] %d", 
@@ -235,9 +235,9 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
     gettimeofday(&now, NULL);
     float elapsed = (now.tv_sec - timeStart.tv_sec)*1.0 + (now.tv_usec-timeStart.tv_usec)*1e-6;
     if (elapsed > 1.0) INFO(NCCL_PROFILE, "timings: rank %d nranks %d P2p connect done in %.2f", comm->rank, comm->nRanks, elapsed);
-    if (timeReported) {
-      printf("\rP2p connect done in %d:%02d                                                                       \n",
-             ((int)elapsed)/60, ((int)elapsed)%60);
+    if (1 || timeReported) {
+      printf("\rP2p connect done in %d:%02d.%06d          \n",
+         ((int)elapsed)/60, ((int)elapsed)%60, (int)((elapsed-((int)elapsed))*(float)1000000));
       fflush(stdout);
     }
   }
