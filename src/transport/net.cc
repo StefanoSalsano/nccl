@@ -1065,7 +1065,7 @@ int mycounter_send =0;
 
 static ncclResult_t sendProxyProgress(struct ncclProxyState* proxyState, struct ncclProxyArgs* args) {
   
-  INFO(NCCL_ALL,"########################################## sendProxyProgress");
+  //INFO(NCCL_ALL,"########################################## sendProxyProgress");
   //INFO(NCCL_ALL,"OOOOOOOOOOOOOO sendProxyProgress counter : %d",mycounter_send++);
   if ((mycounter_send++ % 100) == 0) {
     INFO(NCCL_ALL,"sendProxyProgress counter : %d",mycounter_send);  
@@ -1242,7 +1242,7 @@ int mycounter_recv =0;
 // in this function we are receiving data from a channel/socket and we are writing the to the GPU
 static ncclResult_t recvProxyProgress(struct ncclProxyState* proxyState, struct ncclProxyArgs* args) {
 
-  INFO(NCCL_ALL,"########################################## recvProxyProgress");
+  //INFO(NCCL_ALL,"########################################## recvProxyProgress");
   if ((mycounter_recv++ % 100) == 0) {
     INFO(NCCL_ALL,"recvProxyProgress counter : %d",mycounter_recv);  
   }
@@ -1365,7 +1365,7 @@ static ncclResult_t recvProxyProgress(struct ncclProxyState* proxyState, struct 
         int sizes[NCCL_PROXY_MAX_SUBS];
         void* mhandles[NCCL_PROXY_MAX_SUBS];
         for (int i=0; i<NCCL_PROXY_MAX_SUBS; i++) sizes[i] = 0;
-        INFO(NCCL_ALL,"##################### recvProxyProgress proxyState->ncclNet->test");
+        //INFO(NCCL_ALL,"##################### recvProxyProgress proxyState->ncclNet->test");
         //INFO(NCCL_ALL,"##################### recvProxyProgress proxyState->ncclNet->test - operation %d",
         //          subGroup->requests[step%NCCL_STEPS]->op);
         NCCLCHECK(proxyState->ncclNet->test(subGroup->requests[step%NCCL_STEPS], &done, sizes));
@@ -1445,7 +1445,7 @@ static ncclResult_t recvProxyProgress(struct ncclProxyState* proxyState, struct 
         int done = 1;
         void* request = subGroup->requests[step%NCCL_STEPS];
         if (request) {
-          INFO(NCCL_ALL,"##################### recvProxyProgress if request");
+          //INFO(NCCL_ALL,"##################### recvProxyProgress if request");
           NCCLCHECK(proxyState->ncclNet->test(request, &done, NULL));
         }
         if (done) {

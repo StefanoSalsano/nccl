@@ -639,7 +639,8 @@ static ncclResult_t progressOps(struct ncclProxyState* proxyState, struct ncclPr
   while (op) {
     if (op->state == ncclProxyOpNone) return ncclInternalError;
     TIME_START(0); TIME_START(1);
-    INFO(NCCL_ALL, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX proxy.cc progressOps iteration : %d",while_counter++);
+    //INFO(NCCL_ALL, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX proxy.cc progressOps iteration : %d",while_counter++);
+    //call recvProxyProgress sendProxyProgress (in transport/net.cc)
     NCCLCHECK(op->progress(proxyState, op));    //args->progress = op->connection->tcomm->proxyProgress
     if (op->idle) { TIME_STOP(1); TIME_CANCEL(0); } else { TIME_CANCEL(1); TIME_STOP(0); }
     *idle &= op->idle;
@@ -821,7 +822,7 @@ void* ncclProxyProgress(void *proxyState_) {
   while ((state->stop == 0 || (state->stop == 1 && state->active)) &&
          __atomic_load_n(proxyState->abortFlag, __ATOMIC_ACQUIRE) == 0) {
     int idle = 1;
-    INFO(NCCL_ALL,"QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ ncclProxyProgress while");
+    //INFO(NCCL_ALL,"QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ ncclProxyProgress while");
     ncclResult_t ret = progressOps(proxyState, state, state->active, &idle);
     if (ret != ncclSuccess) {
       __atomic_store_n(&proxyState->asyncResult, ret, __ATOMIC_RELEASE);
