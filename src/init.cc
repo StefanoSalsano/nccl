@@ -1239,7 +1239,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
       }
 
       NCCLCHECKGOTO(ncclTransportP2pSetup(comm, NULL, 1), ret, fail);
-      INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE------------------------>");
+      INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE (if ncclParamNvbPreconnect)------------------------>");
     }
   }
 
