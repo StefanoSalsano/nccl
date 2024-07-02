@@ -175,7 +175,7 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
             TIME_START(3);
             if (sendMask & (1UL<<c)) {
               struct ncclConnector* conn = comm->channels[c].peers[sendPeer]->send + connIndex;
-              //strcpy(conn->conn.hostname,comm->hostname); //STEFANO
+              strcpy(conn->conn.hostname,comm->hostname); //STEFANO
               // This connector hasn't completed connection yet
               if (conn->connected == 0) {
                 NCCLCHECKGOTO(conn->transportComm->connect(comm, sendData[p] + sendDataOffset++, 1, comm->rank, conn), ret, fail);
@@ -194,6 +194,7 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
             TIME_START(4);
             if (recvMask & (1UL<<c)) {
               struct ncclConnector* conn = comm->channels[c].peers[recvPeer]->recv + connIndex;
+              strcpy(conn->conn.hostname,comm->hostname); //STEFANO
               // This connector hasn't completed connection yet
               if (conn->connected == 0) {
                 NCCLCHECKGOTO(conn->transportComm->connect(comm, recvData[p] + recvDataOffset++, 1, comm->rank, conn), ret, fail);
