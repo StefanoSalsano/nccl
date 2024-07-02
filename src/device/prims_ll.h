@@ -315,7 +315,11 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
   __device__ __forceinline__ void loadSendConn(struct ncclConnInfo* conn, int i) {
     sendBuff[i] = (union ncclLLFifoLine*)conn->buffs[NCCL_PROTO_LL];
     sendStep[i] = conn->step;
-    if (wid == i) sendConn = conn;
+    OUT("initialization of sendConn\n")
+    if (wid == i) {sendConn = conn;}
+    else {
+      sendConn = 0xdeadbeaf;
+    }
   }
   __device__ __forceinline__ void loadSendSync() {
     if (tid < fan.nsend()) {
