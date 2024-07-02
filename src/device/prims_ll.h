@@ -315,7 +315,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
   __device__ __forceinline__ void loadSendConn(struct ncclConnInfo* conn, int i) {
     sendBuff[i] = (union ncclLLFifoLine*)conn->buffs[NCCL_PROTO_LL];
     sendStep[i] = conn->step;
-    OUT("initialization of sendConn\n");
+    //OUT("initialization of sendConn\n");
     if (wid == i) {sendConn = conn;}
     else {
       sendConn = (ncclConnInfo *)0xdeadbeaf;
@@ -380,7 +380,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
 
   __device__ void send(intptr_t inpIx, int eltN) {
       if (sendConn->hostname) {
-        OUT ("mypointer %p\n",&sendConn->hostname[0]);
+        //OUT ("mypointer %p\n",&sendConn->hostname[0]);
         //OUT ("%c\n",sendConn->hostname[0]);
       }
       OUT ("thread: %d :GPU send inpIx %lu eltN %d \n",blockIdx.x * blockDim.x + threadIdx.x,inpIx,eltN);

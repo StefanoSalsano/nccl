@@ -175,15 +175,17 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
             TIME_START(3);
             if (sendMask & (1UL<<c)) {
               struct ncclConnector* conn = comm->channels[c].peers[sendPeer]->send + connIndex;
-              strcpy(conn->conn.hostname,comm->hostname); //STEFANO
-              INFO(NCCL_ALL,"conn->conn.hostname %s",conn->conn.hostname);
               // This connector hasn't completed connection yet
               if (conn->connected == 0) {
                 NCCLCHECKGOTO(conn->transportComm->connect(comm, sendData[p] + sendDataOffset++, 1, comm->rank, conn), ret, fail);
                 if (ret == ncclSuccess) {
                   conn->connected = 1;
+                  strcpy(conn->conn.hostname,comm->hostname); //STEFANO
+                  INFO(NCCL_ALL,"conn->conn.hostname %s",conn->conn.hostname);
+                  INFO(NCCL_ALL,"comm->channels[c].devPeers[sendPeer]->send[connIndex] %p",comm->channels[c].devPeers[sendPeer]->send[connIndex]);
                   /* comm->channels[c].devPeers[sendPeer]->send[connIndex] is a device memory access. */
-                  CUDACHECKGOTO(cudaMemcpyAsync(&comm->channels[c].devPeersHostPtr[sendPeer]->send[connIndex], &conn->conn, sizeof(struct ncclConnInfo), cudaMemcpyHostToDevice, comm->sharedRes->hostStream.cudaStream), ret, fail);
+                  CUDACHECKGOTO(cudaMemcpyAsync(&comm->channels[c].devPeersHostPtr[sendPeer]->send[connIndex], &conn->conn, 
+                                   sizeof(struct ncclConnInfo), cudaMemcpyHostToDevice, comm->sharedRes->hostStream.cudaStream), ret, fail);
                 } else if (ret == ncclInProgress) {
                   allChannelsConnected = false;
                 }
