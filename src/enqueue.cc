@@ -168,7 +168,7 @@ static void finishPlan(struct ncclComm* comm, struct ncclKernelPlan* plan) {
   plan->kernelArgs = (struct ncclDevKernelArgs*)ncclMemoryStackAlloc(&comm->memScoped, plan->kernelArgsSize, /*align=*/16);
   plan->kernelArgs->comm = comm->devComm;
   INFO(NCCL_ALL,"p1 %p p2 %p p3 %p\n", plan->kernelArgs->comm, comm->devComm, plan->kernelArgs->comm->hostname);
-  INFO(NCCL_ALL,"p1 %d\n", plan->kernelArgs->comm->biscotto);
+  //INFO(NCCL_ALL,"p1 %d\n", plan->kernelArgs->comm->biscotto);
   
   //strcpy(plan->kernelArgs->comm->hostname,"pluto");
   plan->kernelArgs->channelMask = plan->channelMask;
