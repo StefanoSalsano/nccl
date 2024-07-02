@@ -9,6 +9,7 @@ ncclResult_t ncclTransportRingConnect(struct ncclComm* comm) {
       NCCLCHECKGOTO(ncclTransportP2pConnect(comm, c, 1, &channel->ring.prev, 1, &channel->ring.next, 0), ret, fail);
     }
     NCCLCHECKGOTO(ncclTransportP2pSetup(comm, &comm->graphs[NCCL_ALGO_RING], 0), ret, fail);
+    INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE ncclTransportRingConnect------------------------>");
     INFO(NCCL_INIT, "Connected all rings");
   }
 exit:
@@ -27,6 +28,7 @@ ncclResult_t ncclTransportTreeConnect(struct ncclComm* comm) {
       NCCLCHECKGOTO(ncclTransportP2pConnect(comm, c, 1, &channel->tree.up, NCCL_MAX_TREE_ARITY, channel->tree.down, 0), ret, fail);
     }
     NCCLCHECKGOTO(ncclTransportP2pSetup(comm, &comm->graphs[NCCL_ALGO_TREE], 0), ret, fail);
+    INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE ncclTransportTreeConnect------------------------>")
     INFO(NCCL_INIT, "Connected all trees");
   }
 exit:
