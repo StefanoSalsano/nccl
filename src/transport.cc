@@ -42,7 +42,7 @@ static ncclResult_t selectTransport(struct ncclComm* comm, struct ncclTopoGraph*
 }
 
 // connect with previous and next node in RING or TREE
-// only sets the intent to connect, then the connections are created in ncclTransportP2pSetup(????)
+// only sets the intent to connect, then the connections are created in ncclTransportP2pSetup
 ncclResult_t ncclTransportP2pConnect(struct ncclComm* comm, int channelId, int nrecv, int* peerRecv, int nsend, int* peerSend, int connIndex) {
   TRACE(NCCL_INIT, "nsend %d nrecv %d", nsend, nrecv);
   INFO(NCCL_ALL,"ncclTransportP2pConnect : nsend %d nrecv %d channelId %d peerRecv[0] %d peerSend[0] %d", 
@@ -176,6 +176,7 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
             if (sendMask & (1UL<<c)) {
               struct ncclConnector* conn = comm->channels[c].peers[sendPeer]->send + connIndex;
               strcpy(conn->conn.hostname,comm->hostname); //STEFANO
+              INFO(NCCL_ALL,"conn->conn.hostname %s",conn->conn.hostname);
               // This connector hasn't completed connection yet
               if (conn->connected == 0) {
                 NCCLCHECKGOTO(conn->transportComm->connect(comm, sendData[p] + sendDataOffset++, 1, comm->rank, conn), ret, fail);
