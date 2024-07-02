@@ -320,11 +320,9 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
       sendConn = conn;
       OUT("sendConn->hostname %s\n",sendConn->hostname);
       for (int myj=0;myj<32;myj++) {
-        ncclShmem.comm.hostname_ncclDevComm[myj]=sendConn->hostname[myj];
         ncclShmem.hostname_shmem[myj]=sendConn->hostname[myj];
       }
-      OUT("loadSendConn : ncclShmem.comm.hostname %s\n",ncclShmem.comm.hostname_ncclDevComm);
-      }
+    }
   }
   __device__ __forceinline__ void loadSendSync() {
     if (tid < fan.nsend()) {

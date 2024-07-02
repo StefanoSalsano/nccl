@@ -398,7 +398,6 @@ struct ncclDevComm {
   // Channels, device side
   struct ncclDevChannel* channels/*[MAXCHANNELS]*/;
 
-  char hostname_ncclDevComm [32];  //STEFANO never loaded??
 };
 
 struct alignas(16) ncclDevCommAndChannels {
