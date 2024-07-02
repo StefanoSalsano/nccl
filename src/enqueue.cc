@@ -1279,6 +1279,7 @@ static void persistentDestructor(void* plans_) {
 }
 
 ncclResult_t ncclLaunchPrepare(struct ncclComm* comm) {
+  INFO(NCCL_ALL,"ncclLaunchPrepare %s", comm->hostname);
   ncclResult_t result = ncclSuccess;
   struct ncclKernelPlanner* planner = &comm->planner;
   bool persistent = ncclCudaGraphValid(planner->capturingGraph);
