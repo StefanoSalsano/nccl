@@ -61,6 +61,8 @@ struct ncclShmemData {
   alignas(16) union {
     unpackShmem unpack;
   } devicePlugin;
+
+  char hostname_shmem[32];
 };
 
 extern __shared__ ncclShmemData ncclShmem;
