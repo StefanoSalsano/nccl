@@ -319,7 +319,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
     if (wid == i) {
       sendConn = conn;
       OUT("sendConn->hostname %s\n",sendConn->hostname);
-      for (myj=0;myj<32;myj++) {
+      for (int myj=0;myj<32;myj++) {
         ncclShmem.comm.hostname[myj]=sendConn->hostname[myj];
       }
       OUT("loadSendConn : ncclShmem.comm.hostname %s\n",ncclShmem.comm.hostname);
