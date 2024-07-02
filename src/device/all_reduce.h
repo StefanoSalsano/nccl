@@ -16,8 +16,6 @@ namespace {
     ncclRing *ring = &ncclShmem.channel.ring;
     int ringIx = ring->index;
     const int nranks = ncclShmem.comm.nRanks;
-    OUT("ncclShmem.comm.biscotto %d\n",ncclShmem.comm.biscotto); //STEFANO
-    OUT("ncclShmem.comm.hostname %s\n",ncclShmem.comm.hostname); //STEFANO
     ssize_t gridOffset;
     ssize_t channelCount;
     ssize_t chunkCount;
@@ -32,6 +30,9 @@ namespace {
 
     //printf("Thread %d: Hello from the GPU! Value: %d\n", i, i * 2);
     //printf("Hi from GPU 2 \n");
+    OUT("ncclShmem.comm.biscotto %d\n",ncclShmem.comm.biscotto); //STEFANO
+    OUT("ncclShmem.comm.hostname %s\n",ncclShmem.comm.hostname); //STEFANO
+
     for (ssize_t elemOffset = 0; elemOffset < channelCount; elemOffset += loopCount) {
       ssize_t remCount = channelCount - elemOffset;
       ssize_t chunkOffset;
