@@ -10,7 +10,7 @@ ncclResult_t ncclTransportRingConnect(struct ncclComm* comm) {
     }
     NCCLCHECKGOTO(ncclTransportP2pSetup(comm, &comm->graphs[NCCL_ALGO_RING], 0), ret, fail);
     const char* sourceString = "mystring";
-    strcpy(comm->hostname, sourceString);
+    strcpy(comm->hostname, sourceString); //STEFANO
     INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE ncclTransportRingConnect------------------------>");
     INFO(NCCL_INIT, "Connected all rings");
   }
