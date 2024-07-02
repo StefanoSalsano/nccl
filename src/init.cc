@@ -401,6 +401,7 @@ static ncclResult_t commAlloc(struct ncclComm* comm, struct ncclComm* parent, in
 }
 
 static ncclResult_t devCommSetup(ncclComm_t comm) {
+  INFO(NCCL_ALL,"devCommSetup");
   ncclResult_t ret = ncclSuccess;
   int nRanks = comm->nRanks;
   struct ncclDevCommAndChannels tmpCommAndChans;
