@@ -396,8 +396,8 @@ struct ncclDevComm {
 
   // Channels, device side
   struct ncclDevChannel* channels/*[MAXCHANNELS]*/;
-
-  char hostname[32];
+  int biscotto ;
+  char hostname[32];  //STEFANO
 };
 
 struct alignas(16) ncclDevCommAndChannels {
