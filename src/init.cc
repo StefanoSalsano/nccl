@@ -1170,6 +1170,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
 
   comm->runtimeConn = comm->cuMemSupport && ncclParamRuntimeConnect();
   if (comm->runtimeConn) {
+    INFO(NCCL_ALL,"initTransportsRank if (comm->runtimeConn)");
     for (int c=0; c<comm->nChannels; c++) {
       NCCLCHECKGOTO(setupChannel(comm, c, rank, nranks, rings+c*nranks), ret, fail);
     }
@@ -1178,13 +1179,15 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
     // Check if we can setup CollNet
     if (comm->collNetSupport > 0) ncclCollNetSetup(comm, parent, graphs);
   } else {
+    INFO(NCCL_ALL,"initTransportsRank else (comm->runtimeConn)");
+
     for (int c=0; c<comm->nChannels; c++) {
       NCCLCHECKGOTO(setupChannel(comm, c, rank, nranks, rings+c*nranks), ret, fail);
     }
     // in our scenario ncclTransportRingConnect calls ncclTransportP2pSetup
-    INFO(NCCL_ALL,"BEFORE ncclTransportRingConnect");
+    INFO(NCCL_ALL,"initTransportsRank BEFORE ncclTransportRingConnect");
     NCCLCHECKGOTO(ncclTransportRingConnect(comm), ret, fail); 
-    INFO(NCCL_ALL,"AFTER ncclTransportRingConnect");
+    INFO(NCCL_ALL,"initTransportsRank AFTER ncclTransportRingConnect");
     // Connect Trees
     NCCLCHECKGOTO(ncclTransportTreeConnect(comm), ret, fail);
 
