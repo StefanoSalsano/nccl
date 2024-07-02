@@ -125,8 +125,8 @@ struct ncclConnInfo {
   uint64_t step;      // Keep where we are
   uint64_t llLastCleaning;
   ncclNetDeviceHandle_t netDeviceHandle;
-  
-  char hostname [32]; //STEFANO
+
+  char hostname [32]; //STEFANO this is working
 };
 
 struct ncclProxyConnector {
@@ -398,7 +398,7 @@ struct ncclDevComm {
   // Channels, device side
   struct ncclDevChannel* channels/*[MAXCHANNELS]*/;
   int biscotto ;
-  char hostname[32];  //STEFANO
+  char hostname [32];  //STEFANO never loaded??
 };
 
 struct alignas(16) ncclDevCommAndChannels {

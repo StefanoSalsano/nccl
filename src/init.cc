@@ -466,7 +466,8 @@ static ncclResult_t devCommSetup(ncclComm_t comm) {
   if (comm->collNetDenseToUserRank != nullptr) {
     NCCLCHECKGOTO(ncclCudaCallocAsync(&tmpCommAndChans.comm.collNetDenseToUserRank, nRanks, comm->sharedRes->deviceStream.cudaStream), ret, fail);
     ncclCommPushCudaFree(comm, tmpCommAndChans.comm.collNetDenseToUserRank);
-    NCCLCHECKGOTO(ncclCudaMemcpyAsync(tmpCommAndChans.comm.collNetDenseToUserRank, comm->collNetDenseToUserRank, nRanks, comm->sharedRes->deviceStream.cudaStream), ret, fail);
+    NCCLCHECKGOTO(ncclCudaMemcpyAsync(tmpCommAndChans.comm.collNetDenseToUserRank, comm->collNetDenseToUserRank, nRanks, 
+                                          comm->sharedRes->deviceStream.cudaStream), ret, fail);
   }
 
   for (int c=0; c < MAXCHANNELS; c++) {
@@ -479,7 +480,8 @@ static ncclResult_t devCommSetup(ncclComm_t comm) {
     tmpCommAndChans.channels[c].nvls = comm->channels[c].nvls;
 
     if (comm->channels[c].ring.userRanks != nullptr) {
-      NCCLCHECKGOTO(ncclCudaMemcpyAsync(tmpCommAndChans.channels[c].ring.userRanks, comm->channels[c].ring.userRanks, nRanks, comm->sharedRes->deviceStream.cudaStream), ret, fail);
+      NCCLCHECKGOTO(ncclCudaMemcpyAsync(tmpCommAndChans.channels[c].ring.userRanks, comm->channels[c].ring.userRanks, 
+                                          nRanks, comm->sharedRes->deviceStream.cudaStream), ret, fail);
     }
   }
 
