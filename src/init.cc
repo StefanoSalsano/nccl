@@ -1182,8 +1182,9 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
       NCCLCHECKGOTO(setupChannel(comm, c, rank, nranks, rings+c*nranks), ret, fail);
     }
     // in our scenario ncclTransportRingConnect calls ncclTransportP2pSetup
+    INFO(NCCL_ALL,"BEFORE ncclTransportRingConnect");
     NCCLCHECKGOTO(ncclTransportRingConnect(comm), ret, fail); 
-
+    INFO(NCCL_ALL,"AFTER ncclTransportRingConnect");
     // Connect Trees
     NCCLCHECKGOTO(ncclTransportTreeConnect(comm), ret, fail);
 
