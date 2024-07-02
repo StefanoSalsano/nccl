@@ -316,10 +316,10 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
     sendBuff[i] = (union ncclLLFifoLine*)conn->buffs[NCCL_PROTO_LL];
     sendStep[i] = conn->step;
     //OUT("initialization of sendConn\n");
-    if (wid == i) {sendConn = conn;}
-    else {
-      sendConn = (ncclConnInfo *)0xdeadbeaf;
-    };
+    if (wid == i) {
+      sendConn = conn;
+      OUT ("sendConn->hostname[0] %c\n",sendConn->hostname[0]);
+      }
   }
   __device__ __forceinline__ void loadSendSync() {
     if (tid < fan.nsend()) {
