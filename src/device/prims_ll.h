@@ -375,7 +375,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
   }
 
   __device__ void send(intptr_t inpIx, int eltN) {
-      //OUT ("%s",sendConn->hostname);
+      OUT ("%s",sendConn->hostname);
       OUT ("thread: %d :GPU send inpIx %lu eltN %d \n",blockIdx.x * blockDim.x + threadIdx.x,inpIx,eltN);
     return LLGenericOp<0, 1, Input, -1>(inpIx, -1, eltN, false);
   }
