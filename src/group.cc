@@ -438,7 +438,8 @@ static ncclResult_t groupLaunch(struct ncclAsyncJob *job_, ncclSimInfo_t* simInf
       if (comm->cuMemSupport && needConnect) {
         struct ncclPreconnectJob* job;
         NCCLCHECKGOTO(ncclCalloc(&job, 1), ret, fail);
-        job->base.func = ncclCollPreconnectFunc;
+        //ncclCollPreconnectFunc executes ncclTransportRingConnect
+        job->base.func = ncclCollPreconnectFunc;  
         job->base.undo = nullptr;
         job->base.destructor = free;
         job->base.state = ncclGroupJobRunning;
@@ -451,6 +452,7 @@ static ncclResult_t groupLaunch(struct ncclAsyncJob *job_, ncclSimInfo_t* simInf
       comm = comm->groupNext;
     } while (comm);
 
+    INFO(NCCL_ALL,"groupLaunch -> asyncJobLaunch 2");
     NCCLCHECKGOTO(asyncJobLaunch(asyncJobsMain, groupAbortFlag), ret, fail);
   }
 
