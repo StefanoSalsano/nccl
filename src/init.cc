@@ -400,8 +400,9 @@ static ncclResult_t commAlloc(struct ncclComm* comm, struct ncclComm* parent, in
   return ncclSuccess;
 }
 
+//called once in our scenario
 static ncclResult_t devCommSetup(ncclComm_t comm) {
-  INFO(NCCL_ALL,"devCommSetup");
+  INFO(NCCL_ALL,"devCommSetup"); 
   ncclResult_t ret = ncclSuccess;
   int nRanks = comm->nRanks;
   struct ncclDevCommAndChannels tmpCommAndChans;
@@ -1180,7 +1181,8 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
     for (int c=0; c<comm->nChannels; c++) {
       NCCLCHECKGOTO(setupChannel(comm, c, rank, nranks, rings+c*nranks), ret, fail);
     }
-    NCCLCHECKGOTO(ncclTransportRingConnect(comm), ret, fail);
+    // in our scenario ncclTransportRingConnect calls ncclTransportP2pSetup
+    NCCLCHECKGOTO(ncclTransportRingConnect(comm), ret, fail); 
 
     // Connect Trees
     NCCLCHECKGOTO(ncclTransportTreeConnect(comm), ret, fail);
@@ -1239,6 +1241,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
         }
       }
 
+      //not executed in our scenario
       NCCLCHECKGOTO(ncclTransportP2pSetup(comm, NULL, 1), ret, fail);
       INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE (if ncclParamNvbPreconnect)------------------------>");
     }

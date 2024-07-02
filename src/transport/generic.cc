@@ -21,6 +21,7 @@ fail:
 }
 
 ncclResult_t ncclTransportTreeConnect(struct ncclComm* comm) {
+  INFO(NCCL_ALL,"ncclTransportTreeConnect");
   ncclResult_t ret = ncclSuccess;
   if (comm && comm->nRanks > 1) {
     // Connect Trees
