@@ -143,6 +143,7 @@ ncclResult_t ncclCollPreconnectFunc(struct ncclAsyncJob* job_) {
     if (job->algoNeedConnect[i]) {
       switch (i) {
         case NCCL_ALGO_RING: {
+          INFO(NCCL_ALL,"ncclCollPreconnectFunc BEFORE ncclTransportRingConnect");
           NCCLCHECKGOTO(ncclTransportRingConnect(comm), ret, fail);
           break;
         }

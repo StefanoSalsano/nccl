@@ -1179,6 +1179,7 @@ static ncclResult_t initTransportsRank(struct ncclComm* comm, struct ncclComm* p
     // Check if we can setup CollNet
     if (comm->collNetSupport > 0) ncclCollNetSetup(comm, parent, graphs);
   } else {
+    //this branch not executed in our scenario
     INFO(NCCL_ALL,"initTransportsRank else (comm->runtimeConn)");
 
     for (int c=0; c<comm->nChannels; c++) {
