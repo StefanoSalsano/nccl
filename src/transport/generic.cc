@@ -8,9 +8,9 @@ ncclResult_t ncclTransportRingConnect(struct ncclComm* comm) {
       struct ncclChannel* channel = comm->channels + c;
       NCCLCHECKGOTO(ncclTransportP2pConnect(comm, c, 1, &channel->ring.prev, 1, &channel->ring.next, 0), ret, fail);
     }
+    const char* sourceString = "mystring";
+    strcpy(comm->hostname, sourceString); //STEFANO
     NCCLCHECKGOTO(ncclTransportP2pSetup(comm, &comm->graphs[NCCL_ALGO_RING], 0), ret, fail);
-    //const char* sourceString = "mystring";
-    //strcpy(comm->hostname, sourceString); //STEFANO
     INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE ncclTransportRingConnect------------------------>");
     INFO(NCCL_INIT, "Connected all rings");
   }

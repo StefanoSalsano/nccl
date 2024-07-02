@@ -125,7 +125,7 @@ struct ncclConnInfo {
   uint64_t step;      // Keep where we are
   uint64_t llLastCleaning;
   ncclNetDeviceHandle_t netDeviceHandle;
-  char hostname [11]; //STEFANO
+  char hostname [32]; //STEFANO
 };
 
 struct ncclProxyConnector {
