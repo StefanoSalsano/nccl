@@ -9,6 +9,8 @@ ncclResult_t ncclTransportRingConnect(struct ncclComm* comm) {
       NCCLCHECKGOTO(ncclTransportP2pConnect(comm, c, 1, &channel->ring.prev, 1, &channel->ring.next, 0), ret, fail);
     }
     NCCLCHECKGOTO(ncclTransportP2pSetup(comm, &comm->graphs[NCCL_ALGO_RING], 0), ret, fail);
+    const char* sourceString = "mystring";
+    strcpy(comm->hostname, sourceString);
     INFO(NCCL_ALL,"ncclTransportP2pSetup ----------------DONE ncclTransportRingConnect------------------------>");
     INFO(NCCL_INIT, "Connected all rings");
   }
