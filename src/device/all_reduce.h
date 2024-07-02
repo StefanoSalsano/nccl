@@ -16,7 +16,7 @@ namespace {
     ncclRing *ring = &ncclShmem.channel.ring;
     int ringIx = ring->index;
     const int nranks = ncclShmem.comm.nRanks;
-    OUT("ncclShmem.comm.comm.hostname %s\n",ncclShmem.comm.comm.hostname);
+    //OUT("ncclShmem.comm.comm.hostname %s\n",ncclShmem.comm.comm.hostname);
     ssize_t gridOffset;
     ssize_t channelCount;
     ssize_t chunkCount;
