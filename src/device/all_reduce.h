@@ -17,7 +17,7 @@ namespace {
     int ringIx = ring->index;
     const int nranks = ncclShmem.comm.nRanks;
     OUT("ncclShmem.comm.biscotto %d\n",ncclShmem.comm.biscotto); //STEFANO
-    //OUT("ncclShmem.comm.hostname %s\n","ciao"); //STEFANO
+    OUT("ncclShmem.comm.hostname %s\n",ncclShmem.comm.hostname); //STEFANO
     ssize_t gridOffset;
     ssize_t channelCount;
     ssize_t chunkCount;

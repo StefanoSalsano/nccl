@@ -176,7 +176,7 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
             if (sendMask & (1UL<<c)) {
               struct ncclConnector* conn = comm->channels[c].peers[sendPeer]->send + connIndex;
               strcpy(conn->conn.hostname,comm->hostname); //STEFANO
-              INFO(NCCL_ALL,"conn->conn.hostname %s",conn->conn.hostname);
+              //INFO(NCCL_ALL,"conn->conn.hostname %s",conn->conn.hostname);
               // This connector hasn't completed connection yet
               if (conn->connected == 0) {
                 NCCLCHECKGOTO(conn->transportComm->connect(comm, sendData[p] + sendDataOffset++, 1, comm->rank, conn), ret, fail);
