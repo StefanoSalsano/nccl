@@ -32,7 +32,7 @@ namespace {
     //printf("Hi from GPU 2 \n");
 
     OUT("runRing ncclShmem.comm.hostname %s\n",ncclShmem.comm.hostname_ncclDevComm); //STEFANO  ncclDevComm
-    OUT("runRing ncclShmem.hostname_shmem %s\n",ncclShmem.comm.hostname_shmem); //STEFANO  
+    OUT("runRing ncclShmem.hostname_shmem %s\n",ncclShmem.hostname_shmem); //STEFANO  
 
     for (ssize_t elemOffset = 0; elemOffset < channelCount; elemOffset += loopCount) {
       ssize_t remCount = channelCount - elemOffset;
