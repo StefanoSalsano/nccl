@@ -182,7 +182,7 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
                   conn->connected = 1;
                   strcpy(conn->conn.hostname,comm->hostname); //STEFANO
                   INFO(NCCL_ALL,"conn->conn.hostname %s",conn->conn.hostname);
-                  INFO(NCCL_ALL,"comm->channels[c].devPeers[sendPeer]->send[connIndex] %p",&comm->channels[c].devPeers[sendPeer]->send[connIndex]);
+                  //INFO(NCCL_ALL,"comm->channels[c].devPeers[sendPeer]->send[connIndex] %p",&comm->channels[c].devPeers[sendPeer]->send[connIndex]);
                   /* comm->channels[c].devPeers[sendPeer]->send[connIndex] is a device memory access. */
                   CUDACHECKGOTO(cudaMemcpyAsync(&comm->channels[c].devPeersHostPtr[sendPeer]->send[connIndex], &conn->conn, 
                                    sizeof(struct ncclConnInfo), cudaMemcpyHostToDevice, comm->sharedRes->hostStream.cudaStream), ret, fail);
