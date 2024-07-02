@@ -318,7 +318,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
     //OUT("initialization of sendConn\n");
     if (wid == i) {
       sendConn = conn;
-      OUT ("sendConn->hostname[0] %c\n",sendConn->hostname[0]);
+      OUT ("sendConn->hostname %s\n",sendConn->hostname);
       }
   }
   __device__ __forceinline__ void loadSendSync() {
