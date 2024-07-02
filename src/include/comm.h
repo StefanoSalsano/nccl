@@ -555,7 +555,7 @@ struct ncclComm {
   void *tunerContext;
   // buffer registration cache
   struct ncclRegCache regCache;
-  char [11] hostname;
+  char hostname [11] ;
   uint64_t endMagic;
 };
 
