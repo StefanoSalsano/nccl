@@ -159,7 +159,7 @@ static void ncclDebugInit() {
 }
 
 char * getAddressOfStaticHostname (void) {
-  return &hostname;
+  return (char *) &hostname;
 } 
 
 /* Common logging function used by the INFO, WARN and TRACE macros
