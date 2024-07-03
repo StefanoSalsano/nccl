@@ -11,7 +11,7 @@
 
 #ifdef ENABLE_OUT
 #define OUT(...) printf(__VA_ARGS__)
-#define OUT2(STRING, ...) printf("STRING", __VA_ARGS__)
+#define OUT2(STRING, ...) printf(\"STRING\", __VA_ARGS__)
 
 #else
 #define OUT(...)
