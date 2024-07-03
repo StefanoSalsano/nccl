@@ -10,21 +10,7 @@
 
 #include "define_out_printf.h"
 
-__device__ void add_hostname(const char* format, ...) {
-    
-    // Start processing the variable arguments
-    va_list args;
-    va_start(args, format);
-    
-    // Print the hostname
-    printf("%s: ", "hostname");
-    
-    // Print the formatted string
-    printf(format, args);
-    
-    // Clean up the variable argument list
-    va_end(args);
-};
+
 
 
 namespace {
