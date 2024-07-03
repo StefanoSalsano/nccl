@@ -16,7 +16,7 @@ __device__ void add_hostname(const char* format, ...) {
     printf("%s: ", "hostname");
     
     // Print the formatted string
-    vprintf(format, args);
+    printf(format, args);
     
     // Clean up the variable argument list
     va_end(args);
