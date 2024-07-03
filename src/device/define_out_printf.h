@@ -6,7 +6,7 @@
 //define ENABLE_OUT to enable debug printing in CUDA kernels
 #define ENABLE_OUT
 
-void add_hostname(const char* format, ...) {
+__device_ void add_hostname(const char* format, ...) {
     
     // Start processing the variable arguments
     va_list args;
