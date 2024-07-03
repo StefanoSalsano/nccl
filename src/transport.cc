@@ -183,7 +183,7 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
                 NCCLCHECKGOTO(conn->transportComm->connect(comm, sendData[p] + sendDataOffset++, 1, comm->rank, conn), ret, fail);
                 if (ret == ncclSuccess) {
                   conn->connected = 1;
-                  strcpy(conn->conn.hostname,getAddressOfStaticHostname())); //STEFANO
+                  strcpy(conn->conn.hostname,getAddressOfStaticHostname()); //STEFANO
                   INFO(NCCL_ALL,"conn->conn.hostname %s",conn->conn.hostname);
                   //INFO(NCCL_ALL,"comm->channels[c].devPeers[sendPeer]->send[connIndex] %p",&comm->channels[c].devPeers[sendPeer]->send[connIndex]);
                   /* comm->channels[c].devPeers[sendPeer]->send[connIndex] is a device memory access. */
