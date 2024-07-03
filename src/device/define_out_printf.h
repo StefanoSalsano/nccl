@@ -6,26 +6,11 @@
 //define ENABLE_OUT to enable debug printing in CUDA kernels
 #define ENABLE_OUT
 
-__device__ void add_hostname(const char* format, ...) {
-    
-    // Start processing the variable arguments
-    va_list args;
-    va_start(args, format);
-    
-    // Print the hostname
-    printf("%s: ", "hostname");
-    
-    // Print the formatted string
-    printf(format, args);
-    
-    // Clean up the variable argument list
-    va_end(args);
-};
 
+//#define OUT(...) add_hostname(__VA_ARGS__)
 
 #ifdef ENABLE_OUT
-//#define OUT(...) printf(__VA_ARGS__)
-#define OUT(...) add_hostname(__VA_ARGS__)
+#define OUT(...) printf(__VA_ARGS__)
 #else
 #define OUT(...)
 #endif

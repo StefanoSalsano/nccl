@@ -10,6 +10,23 @@
 
 #include "define_out_printf.h"
 
+__device__ void add_hostname(const char* format, ...) {
+    
+    // Start processing the variable arguments
+    va_list args;
+    va_start(args, format);
+    
+    // Print the hostname
+    printf("%s: ", "hostname");
+    
+    // Print the formatted string
+    printf(format, args);
+    
+    // Clean up the variable argument list
+    va_end(args);
+};
+
+
 namespace {
   template<typename T, typename RedOp, typename Proto>
   __device__ __forceinline__ void runRing(int tid, int nthreads, struct ncclDevWorkColl* work) {
@@ -32,6 +49,7 @@ namespace {
     //printf("Hi from GPU 2 \n");
 
     OUT("runRing ncclShmem.hostname_shmem %s\n",ncclShmem.hostname_shmem); //STEFANO  
+    add_hostname("runRing ncclShmem.hostname_shmem %s\n",ncclShmem.hostname_shmem);
 
     for (ssize_t elemOffset = 0; elemOffset < channelCount; elemOffset += loopCount) {
       ssize_t remCount = channelCount - elemOffset;
