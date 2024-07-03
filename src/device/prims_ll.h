@@ -399,11 +399,8 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
   }
 
   __device__ void send(intptr_t inpIx, int eltN) {
-      if (sendConn->hostname) {
-        //OUT ("mypointer %p\n",&sendConn->hostname[0]);
-        //OUT ("%c\n",sendConn->hostname[0]);
-      }
       OUT ("thread: %d :GPU send inpIx %lu eltN %d \n",blockIdx.x * blockDim.x + threadIdx.x,inpIx,eltN);
+      add_hostname("thread: %d :GPU send inpIx %lu eltN %d \n",blockIdx.x * blockDim.x + threadIdx.x,inpIx,eltN);
     return LLGenericOp<0, 1, Input, -1>(inpIx, -1, eltN, false);
   }
   __device__ void sendFromOutput(intptr_t outIx, int eltN) {
