@@ -20,7 +20,7 @@ __device_ void add_hostname(const char* format, ...) {
     
     // Clean up the variable argument list
     va_end(args);
-}
+};
 
 
 #ifdef ENABLE_OUT
