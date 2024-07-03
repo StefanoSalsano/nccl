@@ -45,23 +45,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
   inline __device__ uint32_t recvFlag(int i) { return NCCL_LL_FLAG(recvStep[i]+1); }
   inline __device__ uint32_t sendFlag(int i) { return NCCL_LL_FLAG(sendStep[i]+1); }
 
-  inline __device__ void add_hostname(const char* format, ...) {
-    
-    // Start processing the variable arguments
-    va_list args;
-    va_start(args, format);
-    
-    // Print the hostname
-    printf("%s: ", "hostname");
-    
-    // Print the formatted string
-    printf(format, args);
-    
-    // Clean up the variable argument list
-    va_end(args);
-  }
-
-
+  
   inline __device__ void barrier() {
     if (nthreads == WARP_SIZE) {
       __syncwarp();
