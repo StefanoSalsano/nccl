@@ -1,6 +1,8 @@
 #ifndef DEFINE_OUT_PRINTF_H_
 #define DEFINE_OUT_PRINTF_H_
 
+#include <stdarg.h>
+
 //define ENABLE_OUT to enable debug printing in CUDA kernels
 #define ENABLE_OUT
 
