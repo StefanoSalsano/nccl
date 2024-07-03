@@ -21,6 +21,8 @@ extern FILE *ncclDebugFile;
 
 void ncclDebugLog(ncclDebugLogLevel level, unsigned long flags, const char *filefunc, int line, const char *fmt, ...) __attribute__ ((format (printf, 5, 6)));
 
+extern char * getAddressOfStaticHostname(void);
+
 // Let code temporarily downgrade WARN into INFO
 extern thread_local int ncclDebugNoWarn;
 extern char ncclLastError[];

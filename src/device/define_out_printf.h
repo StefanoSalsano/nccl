@@ -6,13 +6,10 @@
 //define ENABLE_OUT to enable debug printing in CUDA kernels
 #define ENABLE_OUT
 
-
-//#define OUT(...) add_hostname(__VA_ARGS__)
+//#define OUT(...) printf(__VA_ARGS__)
 
 #ifdef ENABLE_OUT
-#define OUT(...) printf(__VA_ARGS__)
-#define OUT2(format, ...) printf("%s: " format, ncclShmem.hostname_shmem, ##__VA_ARGS__)
-
+#define OUT(format, ...) printf("%s: " format, ncclShmem.hostname_shmem, ##__VA_ARGS__)
 #else
 #define OUT(...)
 #endif

@@ -1282,7 +1282,7 @@ static void persistentDestructor(void* plans_) {
 }
 
 ncclResult_t ncclLaunchPrepare(struct ncclComm* comm) {
-  INFO(NCCL_ALL,"ncclLaunchPrepare %s", comm->hostname);
+  INFO(NCCL_ALL,"ncclLaunchPrepare");
   ncclResult_t result = ncclSuccess;
   struct ncclKernelPlanner* planner = &comm->planner;
   bool persistent = ncclCudaGraphValid(planner->capturingGraph);
@@ -1403,7 +1403,6 @@ NCCL_PARAM(MemSyncDomain, "MEM_SYNC_DOMAIN", cudaLaunchMemSyncDomainRemote);
 //struct ncclComm is defined in comm.h it has more than 100 fields...
 //struct ncclKernelPlan is defined in comm.h it includes the kernel function and the channels
 ncclResult_t ncclLaunchKernel(struct ncclComm* comm, struct ncclKernelPlan* plan) {
-  INFO(NCCL_ALL,"myhostname %s", comm->hostname);
   struct ncclKernelPlanner* planner = &comm->planner;
   int nChannels = countOneBits(plan->channelMask);
   void* sym = plan->kernelFn;

@@ -555,7 +555,6 @@ struct ncclComm {
   void *tunerContext;
   // buffer registration cache
   struct ncclRegCache regCache;
-  char hostname [32] ; //STEFANO
   uint64_t endMagic;
 };
 

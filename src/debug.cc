@@ -158,6 +158,10 @@ static void ncclDebugInit() {
   pthread_mutex_unlock(&ncclDebugLock);
 }
 
+char * getAddressOfStaticHostname (void) {
+  return &hostname;
+} 
+
 /* Common logging function used by the INFO, WARN and TRACE macros
  * Also exported to the dynamically loadable Net transport modules so
  * they can share the debugging mechanisms and output files
