@@ -75,8 +75,6 @@ NCCL_PARAM(ConnectRoundMaxPeers, "CONNECT_ROUND_MAX_PEERS", 128);
 NCCL_PARAM(ReportConnectProgress, "REPORT_CONNECT_PROGRESS", 1);
 #include <sys/time.h>
 
-static char hostname[32];
-
 
 // opens the connections, waits and connects
 ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* graph, int connIndex, int* highestTransportType/*=NULL*/) {
@@ -205,7 +203,7 @@ ncclResult_t ncclTransportP2pSetup(struct ncclComm* comm, struct ncclTopoGraph* 
                 NCCLCHECKGOTO(conn->transportComm->connect(comm, recvData[p] + recvDataOffset++, 1, comm->rank, conn), ret, fail);
                 if (ret == ncclSuccess) {
                   conn->connected = 1;
-                  strcpy(conn->conn.hostname,comm->hostname); //STEFANO
+                  strcpy(conn->conn.hostname,getAddressOfStaticHostname()); //STEFANO
                   INFO(NCCL_ALL,"conn->conn.hostname %s",conn->conn.hostname);
                   /* comm->channels[c].devPeers[recvPeer]->recv[connIndex] is a device memory access. */
                   CUDACHECKGOTO(cudaMemcpyAsync(&comm->channels[c].devPeersHostPtr[recvPeer]->recv[connIndex], &conn->conn, 
