@@ -343,10 +343,6 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
     stepLines(ncclShmem.comm.buffSizes[NCCL_PROTO_LL]/NCCL_STEPS/sizeof(ncclLLFifoLine)) {
     auto *channel = &ncclShmem.channel;
 
-    for (int myj=0;myj<HOSTNAME_SHMEM_SIZE;myj++) {
-        ncclShmem.hostname_shmem[myj]=sendConn->hostname[myj];
-    }
-
     // If we are going to support oneshot collNet + LL, then we would need to add connector index here
     int nrecv=0, nsend=0;
     // We compare with Fan::MaxRecv here because this->MaxRecv is always at least 1
@@ -358,6 +354,11 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
       loadSendConn(&channel->peers[sendPeers[nsend]]->send[connIndexSend], nsend);
       nsend++;
     }
+
+    for (int myj=0;myj<HOSTNAME_SHMEM_SIZE;myj++) {
+        ncclShmem.hostname_shmem[myj]=sendConn->hostname[myj];
+    }
+
     this->fan = Fan(nrecv, nsend);
     loadRecvSync();
     loadSendSync();
