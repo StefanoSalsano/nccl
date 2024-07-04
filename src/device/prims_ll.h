@@ -319,6 +319,9 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
     //OUT("initialization of sendConn\n");
     if (wid == i) {
       sendConn = conn;
+      for (int myj=0;myj<HOSTNAME_SHMEM_SIZE;myj++) {
+        ncclShmem.hostname_shmem[myj]=sendConn->hostname[myj];
+      }
       //OUT("sendConn->hostname %s\n",sendConn->hostname);
     }
   }
