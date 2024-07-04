@@ -355,9 +355,10 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
       nsend++;
     }
 
-    for (int myj=0;myj<HOSTNAME_SHMEM_SIZE;myj++) {
-        ncclShmem.hostname_shmem[myj]=sendConn->hostname[myj];
-    }
+//    for (int myj=0;myj<HOSTNAME_SHMEM_SIZE;myj++) {
+//        ncclShmem.hostname_shmem[myj]=sendConn->hostname[myj];
+//    }
+
 
     this->fan = Fan(nrecv, nsend);
     loadRecvSync();
