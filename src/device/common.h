@@ -13,6 +13,8 @@
 #include "reduce_kernel.h"
 #include "network/unpack/unpack_defs.h"
 
+#define HOSTNAME_SHMEM_SIZE 32 //STEFANO
+
 #define COLL_UNROLL (ncclCollUnroll())
 
 #if __CUDA_ARCH__ >= 700
@@ -62,7 +64,7 @@ struct ncclShmemData {
     unpackShmem unpack;
   } devicePlugin;
 
-  char hostname_shmem[32];
+  char hostname_shmem[HOSTNAME_SHMEM_SIZE];
 };
 
 extern __shared__ ncclShmemData ncclShmem;

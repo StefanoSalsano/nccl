@@ -319,10 +319,7 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
     //OUT("initialization of sendConn\n");
     if (wid == i) {
       sendConn = conn;
-      OUT("sendConn->hostname %s\n",sendConn->hostname);
-      for (int myj=0;myj<32;myj++) {
-        ncclShmem.hostname_shmem[myj]=sendConn->hostname[myj];
-      }
+      //OUT("sendConn->hostname %s\n",sendConn->hostname);
     }
   }
   __device__ __forceinline__ void loadSendSync() {
@@ -345,6 +342,11 @@ class Primitives<T, RedOp, Fan, Direct, ProtoLL, P2p>:
     tid(tid), nthreads(nthreads), wid(tid%WARP_SIZE), group(group),
     stepLines(ncclShmem.comm.buffSizes[NCCL_PROTO_LL]/NCCL_STEPS/sizeof(ncclLLFifoLine)) {
     auto *channel = &ncclShmem.channel;
+
+    for (int myj=0;myj<HOSTNAME_SHMEM_SIZE;myj++) {
+        ncclShmem.hostname_shmem[myj]=sendConn->hostname[myj];
+    }
+
     // If we are going to support oneshot collNet + LL, then we would need to add connector index here
     int nrecv=0, nsend=0;
     // We compare with Fan::MaxRecv here because this->MaxRecv is always at least 1
