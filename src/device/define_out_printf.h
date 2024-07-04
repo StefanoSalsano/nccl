@@ -3,7 +3,7 @@
 
 
 //define ENABLE_OUT to enable debug printing in CUDA kernels
-#define ENABLE_OUT
+//#define ENABLE_OUT
 
 //#define OUT(...) printf(__VA_ARGS__)
 
