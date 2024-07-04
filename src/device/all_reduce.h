@@ -33,11 +33,8 @@ namespace {
 
     //printf("Thread %d: Hello from the GPU! Value: %d\n", i, i * 2);
     //printf("Hi from GPU 2 \n");
-
-     
-    OUT("runRing ncclShmem.hostname_shmem %s\n",ncclShmem.hostname_shmem); //STEFANO)
-    //add_hostname("runRing ncclShmem.hostname_shmem %s\n",ncclShmem.hostname_shmem);
-
+    //OUT("runRing ncclShmem.hostname_shmem %s\n",ncclShmem.hostname_shmem);
+    
     for (ssize_t elemOffset = 0; elemOffset < channelCount; elemOffset += loopCount) {
       ssize_t remCount = channelCount - elemOffset;
       ssize_t chunkOffset;
